@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://localhost:8080/pizza_project/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Firewood Pizza</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./Firewood Pizza_files/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="./Firewood Pizza_files/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-danger justify-content-between">
+        <a class="navbar-brand text-white">Firewood Pizza</a>
+        <form class="form-inline">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Sign-In</button>
+        </form>
+    </nav>
+    
+    <div class="banner">
+        <img src="./Firewood Pizza_files/banner2.jpg" alt="Firewood Pizza Banner">
+        <div class="banner-content">
+            <h1>Welcome to Firewood Pizza</h1>
+            <p>The best pizza in town!</p>
+        </div>
+    </div>
+    
+    <div class="order-section">
+        <h1>START YOUR ORDER</h1>
+        <div class="btn-group btn-group-toggle mb-3 w-100" data-toggle="buttons">
+            <label class="btn btn-light active" style="background-color:red;color:white">
+                <input type="radio" name="options" id="deliver" autocomplete="off"> <i class="fas fa-motorcycle"></i> Deliver
+            </label>
+            <label class="btn btn-light">
+                <input type="radio" name="options" id="collect" autocomplete="off"> <i class="fas fa-map-marker-alt"></i> Pick Up
+            </label>
+        </div>
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Delivery postcode">
+            <div class="input-group-append">
+                <button class="btn view-deals-btn" type="button">View Deals</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="./Firewood Pizza_files/jquery-3.2.1.slim.min.js.download" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="./Firewood Pizza_files/popper.min.js.download" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39jFES/heMQPyh39jO5p8N" crossorigin="anonymous"></script>
+    <script src="./Firewood Pizza_files/bootstrap.min.js.download" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFwAIlUjK9M9GqOUcmgfM0XKp4" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const buttons = document.querySelectorAll(".btn-group-toggle .btn");
+            buttons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    buttons.forEach((btn) => btn.classList.remove("active"));
+                    button.classList.add("active");
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

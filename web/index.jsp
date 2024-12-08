@@ -1,3 +1,10 @@
+<%-- 
+    Document   : index
+    Created on : Dec 8, 2024, 10:07:41 AM
+    Author     : MAS
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,3 +110,4 @@
     </script>
 </body>
 </html>
+

@@ -4,10 +4,6 @@
         <servlet-name>CustomerServlet</servlet-name>
         <servlet-class>controller.CustomerServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>CustomerServlet</servlet-name>
-        <url-pattern>/customerServlet</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

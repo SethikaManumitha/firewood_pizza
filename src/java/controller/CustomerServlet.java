@@ -60,14 +60,14 @@ public class CustomerServlet extends HttpServlet {
                 break;
 
             default:
-                System.out.println("No Path");
+                showNewForm(request, response);
                 break;
         }
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("signup.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
     }
     

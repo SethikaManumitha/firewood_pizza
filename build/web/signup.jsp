@@ -17,17 +17,17 @@
     height: 100vh;
     padding: 0;
 }
-.img-banner, .form-banner {
+.basket, .form-banner {
     width: 50%;
     height: 100%;
     position: relative;
 }
-.img-banner img {
+.basket img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.img-banner::after {
+.basket::after {
     content: '';
     position: absolute;
     top: 0;
@@ -93,8 +93,8 @@
         <!-- Main Content -->
         <div class="container-fluid">
             <!-- Image Section with Black Overlay -->
-            <div class="img-banner">
-                <img src="assets/signup.JPG" alt="Pizza Image">
+            <div class="basket">
+                <img src="assets/signup.jpg" alt="Pizza Image">
             </div>
             
             <!-- Form Section -->

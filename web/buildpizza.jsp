@@ -7,81 +7,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">  
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            height: 100%;
-        }
-        .container-fluid {
-            display: flex;
-            height: 100vh;
-            padding: 0;
-        }
-        .form-banner {
-            width: 70%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8f9fa;
-        }
-        .basket {
-            width: 30%;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            height: 100%;
-        }
-        .form-container {
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .dropdown-container {
-            display: none;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        .dropdown-btn {
-            width: 100%;
-            background-color: #f8f9fa;
-            color: #495057;
-            text-align: left;
-            padding: 10px 15px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .dropdown-btn:focus {
-            outline: none;
-        }
-        .dropdown-btn i {
-            transition: transform 0.3s;
-        }
-        .dropdown-btn.active i {
-            transform: rotate(180deg);
-        }
-        .price {
-            font-weight: bold;
-            color: #dc3545;
-        }
-    </style>
+    <link href="assets/css/buildpizza.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-dark bg-danger justify-content-between">
         <a class="navbar-brand text-white">Firewood Pizza</a>
         <form class="form-inline">
+             <a href="login.jsp">
+                <button class="btn btn-outline-light my-2 my-sm-0" style="margin-right:20px;" type="button">Sign-In</button>
+            </a>
             <a href="signup.jsp">
                 <button class="btn btn-outline-light my-2 my-sm-0" type="button">Sign-Up</button>
             </a>
@@ -180,6 +115,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+    <label for="quantity">Quantity</label>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary" type="button" id="decrementQty">-</button>
+        </div>
+        <input type="text" class="form-control text-center" id="txtqty" name="txtqty" value="1" readonly>
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="incrementQty">+</button>
+        </div>
+    </div>
+</div>
 
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -200,123 +147,20 @@
         <div class="basket">
             <h3>Basket</h3>
             <div id="basketContent">
-                <ul id="basketList"></ul>
-                <div>Total: LKR <span id="totalAmount">0</span></div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <button type="button" class="btn btn-success mt-3" id="addToCartBtn" style="width:100%;position: relative;top:100%;">Check Out</button>
-                </div>
-            </div>
+    <div id="basketList" class="basket-items"></div>
+    <div class="basket-summary">
+        <h5>Total: LKR <span id="totalAmount">0</span></h5>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-success mt-3" id="checkoutBtn" onclick="window.location.href='checkout.jsp'" style="width:100%;">Check Out</button>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 
-    <script>
-  $(document).ready(function() {
-    // Initialize basket total
-    let totalAmount = 0;
-    let netTotal = 0;  // Net total for the entire basket
-
-    // Function to calculate the total price for a single pizza
-    function calculateTotal() {
-        totalAmount = 0;
-
-        // Add the price of the selected size
-        let sizePrice = parseFloat($('input[name="size"]:checked').data('price') || 0);
-        totalAmount += sizePrice;
-
-        // Add the price of the selected crust
-        let crustPrice = parseFloat($('input[name="crust"]:checked').data('price') || 0);
-        totalAmount += crustPrice;
-
-        // Add the price of the selected toppings
-        $('input[name="topping"]:checked').each(function() {
-            totalAmount += parseFloat($(this).data('price') || 0);
-        });
-
-        // Update the total price shown on the "Add to Cart" button
-        $('#addToCartBtn').text('Add to Cart - LKR ' + totalAmount.toFixed(2));
-
-        // Update total in the basket for this pizza
-        $('#totalAmount').text(totalAmount.toFixed(2));
-    }
-
-    // Dropdown button click event to toggle dropdown visibility
-    $(".dropdown-btn").click(function() {
-        var dropdownContainer = $(this).next(".dropdown-container");
-
-        // Toggle active class for the button
-        $(this).toggleClass("active");
-
-        // Toggle the visibility of the dropdown
-        dropdownContainer.toggleClass("active");
-        dropdownContainer.slideToggle(); // This will slide the dropdown up or down
-    });
-
-    // Size change event
-    $('input[name="size"]').change(function() {
-        var selectedSize = $('input[name="size"]:checked').next('label').text();
-        $('#sizeDropdown').html(selectedSize + ' <i class="fas fa-chevron-down"></i>');
-        calculateTotal();
-    });
-
-    // Crust change event
-    $('input[name="crust"]').change(function() {
-        var selectedCrust = $('input[name="crust"]:checked').next('label').text();
-        $('#crustDropdown').html(selectedCrust + ' <i class="fas fa-chevron-down"></i>');
-        calculateTotal();
-    });
-
-    // Sauce change event
-    $('input[name="sauce"]').change(function() {
-        var selectedSauce = $('input[name="sauce"]:checked').next('label').text();
-        $('#sauceDropDown').html(selectedSauce + ' <i class="fas fa-chevron-down"></i>');
-        calculateTotal();
-    });
-
-    // Topping change event
-    $('input[name="topping"]').change(function() {
-        var selectedToppings = [];
-        $('input[name="topping"]:checked').each(function() {
-            selectedToppings.push($(this).next('label').text());
-        });
-        var toppingText = selectedToppings.join(', ') || "Select Topping";
-        $('#toppingDropdown').html(toppingText + ' <i class="fas fa-chevron-down"></i>');
-        calculateTotal();
-    });
-
-    // Add to cart button event
-    $('#addToCartBtn').click(function() {
-        // Get pizza details
-        let pizzaName = $('#txtname').val() || "Unnamed Pizza";
-        let pizzaPrice = totalAmount;
-
-        // Add pizza to basket list
-        if (pizzaPrice > 0) {
-            // Add pizza price to the net total
-            netTotal += pizzaPrice;
-
-            // Add pizza to the basket list
-            $('#basketList').append('<li>' + pizzaName + ' - LKR ' + pizzaPrice.toFixed(2) + '</li>');
-
-            // Update net total in the basket
-            $('#totalAmount').text(netTotal.toFixed(2));
-
-            // Reset total for the next pizza
-            totalAmount = 0;
-            $('#addToCartBtn').text('Add to Cart - LKR ' + totalAmount.toFixed(2));
-
-            // Reset the dropdown text for all selections
-            $('#sizeDropdown').html('Select Size <i class="fas fa-chevron-down"></i>');
-            $('#crustDropdown').html('Select Crust <i class="fas fa-chevron-down"></i>');
-            $('#sauceDropDown').html('Select Sauce <i class="fas fa-chevron-down"></i>');
-            $('#toppingDropdown').html('Select Topping <i class="fas fa-chevron-down"></i>');
-        } else {
-            alert("Please complete your pizza selection before adding to cart.");
-        }
-    });
-  });
-</script>
-
+    <script src="assets/js/buildpizza.js"></script>
 </body>
 </html>

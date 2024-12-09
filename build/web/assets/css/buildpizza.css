@@ -1,0 +1,121 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : Dec 9, 2024, 1:04:25 PM
+    Author     : MAS
+*/
+
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            height: 100%;
+        }
+        .container-fluid {
+            display: flex;
+            height: 100vh;
+            padding: 0;
+        }
+        .form-banner {
+            width: 70%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+        }
+        .basket {
+            width: 30%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .dropdown-container {
+            display: none;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .dropdown-btn {
+            width: 100%;
+            background-color: #f8f9fa;
+            color: #495057;
+            text-align: left;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dropdown-btn:focus {
+            outline: none;
+        }
+        .dropdown-btn i {
+            transition: transform 0.3s;
+        }
+        .dropdown-btn.active i {
+            transform: rotate(180deg);
+        }
+        .price {
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+
+        .basket-items {
+    margin-top: 20px;
+}
+.basket-card {
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.basket-card .details {
+    flex: 1;
+}
+.basket-card h6 {
+    margin: 0 0 5px 0;
+    font-weight: bold;
+}
+.basket-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.basket-card .actions  {
+    margin-left: 100px;
+}
+
+.basket-card .actions button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.basket-card .actions button i {
+    font-size: 18px;
+    color: #dc3545;
+}
+.basket-card .actions button.favorite i {
+    color: #ff3c07;
+}

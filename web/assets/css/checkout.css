@@ -1,0 +1,18 @@
+.containerBox {
+    margin-top: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.btnproceed {
+    width: 50%;
+    margin: 0 auto; 
+    display: block; 
+    transition: width 0.3s ease; 
+}
+
+.btnproceed:hover {
+    width: 100%; 
+}

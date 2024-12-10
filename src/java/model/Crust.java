@@ -11,10 +11,10 @@ package model;
 public class Crust {
     private int crustId;
     private String name;
-    private double price;
+    private int price;
 
     // Constructor
-    public Crust(int crustId, String name, double price) {
+    public Crust(int crustId, String name, int price) {
         this.crustId = crustId;
         this.name = name;
         this.price = price;
@@ -41,7 +41,7 @@ public class Crust {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

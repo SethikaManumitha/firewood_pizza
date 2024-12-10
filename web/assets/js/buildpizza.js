@@ -12,32 +12,38 @@ $(document).ready(function() {
 
 
     function calculateTotal() {
-        totalAmount = 0;
+    totalAmount = 0;
 
-        // Add the price of the pizza size
-        selectedSize = $('input[name="size"]:checked').next('label').text();
-        let sizePrice = parseFloat($('input[name="size"]:checked').data('price') || 0);
-        totalAmount += sizePrice;
+    // Add the price of the pizza size
+    selectedSize = $('input[name="size"]:checked').next('label').text();
+    let sizePrice = parseFloat($('input[name="size"]:checked').data('price') || 0);
+    totalAmount += sizePrice;
 
-        // Add the price of the crust
-        selectedCrust = $('input[name="crust"]:checked').next('label').text();
-        let crustPrice = parseFloat($('input[name="crust"]:checked').data('price') || 0);
-        totalAmount += crustPrice;
+    // Add the price of the crust
+    selectedCrust = $('input[name="crust"]:checked').next('label').text();
+    let crustPrice = parseFloat($('input[name="crust"]:checked').data('price') || 0);
+    totalAmount += crustPrice;
 
-        // Add the price of the selected toppings
-        selectedToppings = [];
-        $('input[name="topping"]:checked').each(function() {
-            selectedToppings.push($(this).next('label').text());
-            totalAmount += parseFloat($(this).data('price') || 0);
-        });
+    // Add the price of the selected toppings
+    selectedToppings = [];
+    $('input[name="topping"]:checked').each(function() {
+        selectedToppings.push($(this).next('label').text());
+        totalAmount += parseFloat($(this).data('price') || 0);
+    });
 
-        selectedSauce = $('input[name="sauce"]:checked').next('label').text();
-        quantity = parseInt($('#txtqty').val());
-        totalAmount *= quantity;
-        // Update button and total amount
-        $('#addToCartBtn').text('Add to Cart - LKR ' + totalAmount.toFixed(2));
-        $('#totalAmount').text(totalAmount.toFixed(2));
-    }
+    $('#totalAmountField').val(totalAmount);
+    selectedSauce = $('input[name="sauce"]:checked').next('label').text();
+    quantity = parseInt($('#txtqty').val());
+    totalAmount *= quantity;
+
+    // Update button and total amount
+    $('#addToCartBtn').text('Add to Cart - LKR ' + totalAmount.toFixed(2));
+    $('#totalAmount').text(totalAmount.toFixed(2));
+
+    // Assign the total to the text field
+    
+}
+
 
     // Dropdown button click event
     $(".dropdown-btn").click(function() {
@@ -154,6 +160,11 @@ $('#incrementQty').click(function() {
     // Event listener for favorite button
     $('#basketList').on('click', '.favorite', function () {
         $(this).find('i').toggleClass('fas far');
+    });
+    
+    $('#buildPizzaBtn').click(function() {
+    calculateTotal();
+    // Other actions can be added here
     });
 
 });

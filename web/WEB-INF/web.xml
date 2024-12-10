@@ -4,23 +4,28 @@
         <servlet-name>CustomerServlet</servlet-name>
         <servlet-class>controller.CustomerServlet</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>BuilderServlet</servlet-name>
+        <url-pattern>/BuilderServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
-    
-      <!-- Default servlet mapping for serving static resources -->
+    <!-- Default servlet mapping for serving static resources -->
+    <servlet>
+        <servlet-name>BuilderServlet</servlet-name>
+        <servlet-class>controller.BuilderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.jpg</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.css</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.js</url-pattern>

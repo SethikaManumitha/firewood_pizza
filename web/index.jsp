@@ -171,7 +171,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a href="buildpizza.jsp">
+                <a href="build">
                 <button class="btn view-deals-btn" type="button">Order Now</button>
                 </a>
             </div>

@@ -4,70 +4,113 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pizza {
-    private Crust crust;
-    private Sauce sauce;
-    private List<Topping> toppings;
-    private int quantity;
+    private final String name;
+    private final String crust;
+    private final String sauce;
+    private final List<String> toppings;
+    private final boolean includeCheese;
+    private final int price;
+    private final boolean isFavourite;
+    private final String size; 
 
-   
     private Pizza(Builder builder) {
+        this.name = builder.name;
         this.crust = builder.crust;
         this.sauce = builder.sauce;
         this.toppings = builder.toppings;
-        this.quantity = builder.quantity;
+        this.includeCheese = builder.includeCheese;
+        this.price = builder.price;
+        this.isFavourite = builder.isFavourite;
+        this.size = builder.size; 
     }
 
     // Getters
-    public Crust getCrust() {
+    public String getName() {
+        return name;
+    }
+
+    public String getCrust() {
         return crust;
     }
 
-    public Sauce getSauce() {
+    public String getSauce() {
         return sauce;
     }
 
-    public List<Topping> getToppings() {
+    public List<String> getToppings() {
         return toppings;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public boolean isIncludeCheese() {
+        return includeCheese;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public String getSize() {
+        return size;  // Added getter for size
     }
 
     
-    public double calculatePrice() {
-        double totalPrice = crust.getPrice() + sauce.getPrice();
-        for (Topping topping : toppings) {
-            totalPrice += topping.getPrice();
-        }
-        return totalPrice * quantity;
-    }
-
     // Builder class
     public static class Builder {
-        private Crust crust;
-        private Sauce sauce;
-        private List<Topping> toppings = new ArrayList<>();
-        private int quantity = 1; 
+        private String name;
+        private String crust;
+        private String sauce;
+        private List<String> toppings = new ArrayList<>();
+        private boolean includeCheese = false;
+        private int price = 0;
+        private boolean isFavourite = false;
+        private String size = ""; 
 
-        
-        public Builder setCrust(Crust crust) {
+        // Setters
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setCrust(String crust) {
             this.crust = crust;
             return this;
         }
 
-        public Builder setSauce(Sauce sauce) {
+        public Builder setSauce(String sauce) {
             this.sauce = sauce;
             return this;
         }
 
-        public Builder addTopping(Topping topping) {
-            this.toppings.add(topping);
+        public Builder addToppings(String[] toppingsArray) {
+        if (toppingsArray != null) {
+            for (String topping : toppingsArray) {
+                this.toppings.add(topping);
+            }
+        }
+        return this;
+    }
+
+        public Builder includeCheese(boolean includeCheese) {
+            this.includeCheese = includeCheese;
             return this;
         }
 
-        public Builder setQuantity(int quantity) {
-            this.quantity = quantity;
+        public Builder setPrice(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder setIsFavourite(boolean isFavourite) {
+            this.isFavourite = isFavourite;
+            return this;
+        }
+
+        public Builder setSize(String size) {
+            this.size = size;
             return this;
         }
 

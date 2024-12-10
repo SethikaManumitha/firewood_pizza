@@ -1,3 +1,7 @@
+<%@ page import="java.util.List" %>
+<%@ page import="model.Crust" %>
+<%@ page import="model.Sauce" %>
+<%@ page import="model.Topping" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,13 +43,16 @@
 
     <!-- Main Content -->
     <div class="container-fluid">
-        <!-- Form Section -->
+        
+        
         <div class="form-banner">
             <div class="form-container">
                 <center><h2>Build Your Pizza</h2></center>
+                <form action="build" method="POST">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Name</label>
                     <input type="text" class="form-control" id="txtname" name="txtname" aria-describedby="name" placeholder="Enter Name For Your Pizza">
+                    <input type="hidden" name="email" id="email" value="<%= session.getAttribute("userEmail") %>">
                 </div>
                 <!-- Size Dropdown -->
                 <div class="form-group">
@@ -65,30 +72,36 @@
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="size" id="large" value="Large" data-price="1500">
-                            <label class="form-check-label" for="large">Large (LKR <span class="price">1500</span>)</label>
+                            <label class="form-check-label" for="large">Large (LKR <span class="price">1500.0</span>)</label>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Crust Dropdown -->
                 <div class="form-group">
                     <label for="crust">Crust</label>
                     <button class="dropdown-btn" type="button" id="crustDropdown">
                         Select Crust
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div class="dropdown-container" id="crustOptions">
+                    <div class="dropdown-container" id="crustOption">
+                        <% 
+                        List<Crust> crusts = (List<Crust>) request.getAttribute("crusts");
+                        if (crusts != null) {
+                            for (Crust crust : crusts) {
+                        %>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="crust" id="thin" value="Thin" data-price="100">
-                            <label class="form-check-label" for="thin">Thin Crust (LKR <span class="price">100</span>)</label>
+                            <input class="form-check-input" type="radio" name="crust" id="<%= crust.getName() %>" value="<%= crust.getName() %>" data-price="<%= crust.getPrice() %>">
+                            <label class="form-check-label" for="<%= crust.getName() %>">
+                                <%= crust.getName() %> (LKR <span class="price"><%= crust.getPrice() %></span>)
+                            </label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="crust" id="thick" value="Thick" data-price="150">
-                            <label class="form-check-label" for="thick">Thick Crust (LKR <span class="price">150</span>)</label>
-                        </div>
+                        <% 
+                            }
+                        }
+                        %>
                     </div>
                 </div>
-
+                    
                 <div class="form-group">
                     <label for="sauce">Sauce</label>
                     <button class="dropdown-btn" type="button" id="sauceDropDown">
@@ -96,18 +109,25 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-container" id="sauceOption">
+                        <% 
+                        List<Sauce> sauces = (List<Sauce>) request.getAttribute("sauces");
+                        if (sauces != null) {
+                            for (Sauce sauce : sauces) {
+                        %>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sauce" id="tomato" value="Tomato" >
-                            <label class="form-check-label" for="tomato">Tomato</label>
+                            <input class="form-check-input" type="radio" name="sauce" id="<%= sauce.getName() %>" value="<%= sauce.getName() %>" >
+                            <label class="form-check-label" for="<%= sauce.getName() %>">
+                                <%= sauce.getName() %>
+                            </label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sauce" id="spicy" value="Spicy" >
-                            <label class="form-check-label" for="spicy">Spicy</label>
-                        </div>
+                        <% 
+                            }
+                        }
+                        %>
                     </div>
                 </div>
 
-                <!-- Topping Dropdown -->
+                
                 <div class="form-group">
                     <label for="topping">Topping</label>
                     <button class="dropdown-btn" type="button" id="toppingDropdown">
@@ -115,18 +135,20 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-container" id="toppingOptions">
+                        <% 
+                        List<Topping> toppings = (List<Topping>) request.getAttribute("toppings");
+                        if (toppings != null) {
+                            for (Topping topping : toppings) {
+                        %>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="topping" id="pepperoni" value="Pepperoni" data-price="300">
-                            <label class="form-check-label" for="pepperoni">Pepperoni (LKR <span class="price">300</span>)</label>
+                            <input class="form-check-input" type="checkbox" name="topping" id="<%= topping.getName() %>" value="<%= topping.getName() %>" data-price="<%= topping.getPrice() %>">
+                            <label class="form-check-label" for="<%= topping.getName() %>"><%= topping.getName() %> (LKR <span class="price"><%= topping.getPrice() %></span>)</label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="topping" id="veggie" value="Veggie" data-price="250">
-                            <label class="form-check-label" for="veggie">Veggie (LKR <span class="price">250</span>)</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="topping" id="chicken" value="Chicken" data-price="400">
-                            <label class="form-check-label" for="chicken">Chicken (LKR <span class="price">400</span>)</label>
-                        </div>
+                        <% 
+                            }
+                        }
+                        %>
+                        
                     </div>
                 </div>
                 <div class="form-group">
@@ -143,20 +165,32 @@
 </div>
 
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <input class="form-check-input" type="checkbox" value="" id="cheese" name="cheese">
                     <label class="form-check-label" for="flexCheckDefault">
                         Include Cheese <span style="color:grey">(Additional Charges May Include)</span>
                     </label>
                 </div>
+                <div class="form-group">
+                    <label for="totalAmountField">Total Amount</label>
+                    <input type="text" class="form-control" id="totalAmountField" name="totalAmountField" readonly>
+                </div>
 
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="favourite" name="favourite">
+                    <label class="form-check-label" for="favourite">
+                        Save To Favourites
+                    </label>
+                </div>
+                        
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-danger mt-3" id="addToCartBtn" style="width:100%">Add to Cart - LKR 0</button>
+                        <button type="submit" name="submit" value="BuildPizza" class="btn btn-danger mt-3" style="width:100%">Build Pizza</button>                        
                     </div>
                 </div>
+                </form>          
             </div>
         </div>
-
+                
         <!-- Basket Section -->
         <div class="basket">
             <h3>Basket</h3>

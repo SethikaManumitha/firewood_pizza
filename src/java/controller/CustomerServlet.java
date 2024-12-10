@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import model.Customer;
 /**
  *
@@ -58,6 +59,16 @@ public class CustomerServlet extends HttpServlet {
                 }
             }
                 break;
+            case "/read":   
+            {
+                try {
+                    checkCustomer(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(CustomerServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 
             default:
                 showNewForm(request, response);
@@ -87,6 +98,29 @@ public class CustomerServlet extends HttpServlet {
         customerDao.addCustomer(customer);
         response.sendRedirect("signup.jsp");
     }
+
+    private void checkCustomer(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, IOException, ServletException, ClassNotFoundException {
+
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+
+            boolean userExists = customerDao.selectCustomer(email, password);
+            HttpSession session = request.getSession();
+            if (userExists) {
+                session.setAttribute("status", "logged");
+                session.setAttribute("userEmail", email); 
+                RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                request.setAttribute("alertMessage", "Invalid email or password.");
+                request.setAttribute("alertType", "error");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                dispatcher.forward(request, response);
+            }
+
+            
+        }
 
  
     @Override

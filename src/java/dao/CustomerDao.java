@@ -12,10 +12,7 @@ import util.JDBCUtils;
 
 public class CustomerDao {
     private final String INSERT_CUSTOMER_SQL = "INSERT INTO customer (full_name, email, pass, phone, address, dob, point) VALUES (?, ?, ?, ?, ?, ?, ?);";
-//    private final String SELECT_USERS_SQL = "SELECT * FROM customer";
-//    private final String SELECT_USERS_BY_ID_SQL = "SELECT * FROM customer WHERE custid = ?";
-//    private final String UPDATE_USERS_SQL = "UPDATE employee SET full_name = ?, email = ?, pass = ? WHERE id = ?;";
-//    private final String DELETE_USERS_SQL = "DELETE FROM customer WHERE id = ?;";
+    private final String SELECT_USERS_BY_EMAIL_SQL = "SELECT * FROM customer where email = ? AND pass= ?";
 
     
     // Method to add employee
@@ -40,6 +37,26 @@ public class CustomerDao {
        
     }
     
+    public boolean selectCustomer(String email, String password) {
+            boolean exists = false;
+            try (Connection connection = JDBCUtils.getInstance().getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USERS_BY_EMAIL_SQL)) {
+
+                
+                preparedStatement.setString(1, email);
+                preparedStatement.setString(2, password);
+
+                System.out.println(preparedStatement); 
+                ResultSet rs = preparedStatement.executeQuery();
+                System.out.println(rs);
+                
+                exists = rs.next();
+            } catch (SQLException e) {
+                printSQLException(e);
+            }
+            return exists;
+        }
+
     
     // Method to print SQL exception details
     private void printSQLException(SQLException ex) {

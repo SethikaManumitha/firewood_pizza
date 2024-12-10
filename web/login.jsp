@@ -18,7 +18,7 @@
         <!-- Login Box -->
         <div class="login-box">
             <h2 class="text-danger">Login</h2>
-            <form action="loginServlet" method="POST">
+            <form action="read" method="POST">
                 <div class="form-group">
                     <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                 </div>
@@ -31,9 +31,21 @@
                 </div>
                 <button type="submit" class="btn btn-danger btn-block">LOGIN</button>
                 <p class="small-text mt-3">
-                    <a href="#">Forgot your password?</a>
+                    <a href="signup.jsp">Create New Account</a>
                 </p>
             </form>
         </div>
+        <script>
+            const alertType = "<%= request.getAttribute("alertType") %>";
+        const alertMessage = "<%= request.getAttribute("alertMessage") %>";
+
+        if (alertType && alertMessage) {
+            if (alertType === "success") {
+                alert("SUCCESS: " + alertMessage);
+            } else if (alertType === "error") {
+                alert("ERROR: " + alertMessage);
+            }
+        }
+        </script>
     </body>
 </html>

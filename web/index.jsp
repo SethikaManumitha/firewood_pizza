@@ -124,16 +124,31 @@
 </head>
 <body>
     <nav class="navbar navbar-dark bg-danger justify-content-between">
-        <a class="navbar-brand text-white">Firewood Pizza</a>
-        <form class="form-inline">
+    <a class="navbar-brand text-white">Firewood Pizza</a>
+    <form class="form-inline">
+        <%
+            String status = (String) session.getAttribute("status");
+            if (status == null || !status.equals("logged")) {
+        %>
             <a href="login.jsp">
                 <button class="btn btn-outline-light my-2 my-sm-0" style="margin-right:20px;" type="button">Sign-In</button>
             </a>
             <a href="signup.jsp">
                 <button class="btn btn-outline-light my-2 my-sm-0" type="button">Sign-Up</button>
             </a>
-</form>
-    </nav>
+        <%
+            } else {
+        %>
+            <span class="text-white mr-3">Welcome, <%= session.getAttribute("userEmail") %>!</span>
+            <a href="login.jsp">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="button">Logout</button>
+            </a>
+        <%
+            }
+        %>
+    </form>
+</nav>
+
    
     <div class="banner">
         

@@ -9,7 +9,6 @@ public class Pizza {
     private final String sauce;
     private final List<String> toppings;
     private final boolean includeCheese;
-    private final int price;
     private final boolean isFavourite;
     private final String size; 
 
@@ -19,7 +18,6 @@ public class Pizza {
         this.sauce = builder.sauce;
         this.toppings = builder.toppings;
         this.includeCheese = builder.includeCheese;
-        this.price = builder.price;
         this.isFavourite = builder.isFavourite;
         this.size = builder.size; 
     }
@@ -45,9 +43,6 @@ public class Pizza {
         return includeCheese;
     }
 
-    public int getPrice() {
-        return price;
-    }
 
     public boolean isFavourite() {
         return isFavourite;
@@ -64,8 +59,7 @@ public class Pizza {
         private String crust;
         private String sauce;
         private List<String> toppings = new ArrayList<>();
-        private boolean includeCheese = false;
-        private int price = 0;
+        private boolean includeCheese = false; 
         private boolean isFavourite = false;
         private String size = ""; 
 
@@ -99,10 +93,7 @@ public class Pizza {
             return this;
         }
 
-        public Builder setPrice(int price) {
-            this.price = price;
-            return this;
-        }
+       
 
         public Builder setIsFavourite(boolean isFavourite) {
             this.isFavourite = isFavourite;

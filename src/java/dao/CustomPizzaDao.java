@@ -23,8 +23,9 @@ import model.Topping;
 import util.JDBCUtils;
 
 public class CustomPizzaDao {
-    private final String INSERT_PIZZA_SQL = "INSERT INTO Pizza (pizzaname, custemail, crust, sauce, topping, cheese, size, is_favorite, price)\n" +
+    private final String INSERT_PIZZA_SQL = "INSERT INTO Pizza (pizzaname, custemail, crust, sauce, topping, size,  pizzastatus,is_favorite,cheese)\n" +
 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
     
    public void insertPizza(Pizza pizza, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
@@ -46,10 +47,13 @@ public class CustomPizzaDao {
         }
 
         preparedStatement.setString(5, toppings);
-        preparedStatement.setBoolean(6, pizza.isIncludeCheese());
-        preparedStatement.setString(7, pizza.getSize());
-        preparedStatement.setBoolean(8, pizza.isFavourite());
-        preparedStatement.setInt(9, pizza.getPrice());
+        
+        preparedStatement.setString(6, pizza.getSize());
+       
+        preparedStatement.setBoolean(7, pizza.isFavourite());
+        preparedStatement.setBoolean(8, pizza.isIncludeCheese());
+         preparedStatement.setInt(9, 0);
+        
         preparedStatement.executeUpdate();
         System.out.println("Success");
     } catch (SQLException e) {
@@ -57,10 +61,64 @@ public class CustomPizzaDao {
         printSQLException(e);
     }
 }
+   
+    public List<Pizza>  selectAllPizza(String email) {
+            
+           List<Pizza> pizzaList = new ArrayList<>();
+           
+            try (Connection connection = JDBCUtils.getInstance().getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PIZZA_SQL)) {
+                 preparedStatement.setString(1, email);
+               System.out.println(preparedStatement);
+            
+               ResultSet rs = preparedStatement.executeQuery();
+           
+               while(rs.next()){
+                    String name = rs.getString("pizzaname");
+                    String crust = rs.getString("crust");
+                    String sauce = rs.getString("sauce"); 
+                    String toppingString = rs.getString("topping"); 
+                    
+                    String[] toppings = toppingString.split(",");
+                    
+                    String size = rs.getString("size"); 
+                    
+                    String is_favourite = rs.getString("is_favorite"); 
+                    String cheese = rs.getString("cheese"); 
+                    
+                    Pizza pizza = new Pizza.Builder()
+                    .setName(name)
+                    .setCrust(crust)
+                    .setSauce(sauce)
+                    .setSize(size)
+                    .addToppings(toppings)
+                    .includeCheese(true)
+                    .setIsFavourite(true)
+                    .build();
+                    
+                    pizzaList.add(pizza);
+                }
+            } catch (SQLException e) {
+                printSQLException(e);
+            }
+            return pizzaList;
+        }
 
 
-    private void printSQLException(SQLException e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void printSQLException(SQLException ex) {
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+                e.printStackTrace(System.err);
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                System.err.println("Message: " + e.getMessage());
+                Throwable t = ex.getCause();
+                while (t != null) {
+                    System.out.println("Cause: " + t);
+                    t = t.getCause();
+                }
+            }
+        }
     }
     
 }

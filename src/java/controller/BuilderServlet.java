@@ -82,7 +82,6 @@ public class BuilderServlet extends HttpServlet {
 		dispatcher.forward(request, response);
                 
                 
-                
     }
    
     private void buildPizza(HttpServletRequest request, HttpServletResponse response)
@@ -108,11 +107,12 @@ public class BuilderServlet extends HttpServlet {
                     .addToppings(toppingsArray)
                     .includeCheese(isCheeseIncluded)
                     .setIsFavourite(isFavourite)
-                    .setPrice(price)
                     .build();
             
             
             customPizzaDao.insertPizza(pizza, email);
+            List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+            request.setAttribute("pizzas", pizzas);
             RequestDispatcher dispatcher = request.getRequestDispatcher("buildpizza.jsp");
 	    dispatcher.forward(request, response);
         } catch (ClassNotFoundException ex) {

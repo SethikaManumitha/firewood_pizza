@@ -2,6 +2,7 @@
 <%@ page import="model.Crust" %>
 <%@ page import="model.Sauce" %>
 <%@ page import="model.Topping" %>
+<%@ page import="model.Pizza" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -193,15 +194,27 @@
                 
         <!-- Basket Section -->
         <div class="basket">
-            <h3>Basket</h3>
             <div id="basketContent">
-    <div id="basketList" class="basket-items"></div>
-    <div class="basket-summary">
-        <h5>Total: LKR <span id="totalAmount">0</span></h5>
-    </div>
+     <% 
+                        List<Pizza> pizzas = (List<Pizza>) request.getAttribute("pizzas");
+                        if (pizzas != null) {
+                            for (Pizza pizza : pizzas) {
+                        %>
+                        <p><%= pizza.getName() %></p>
+                        <p><%= pizza.getCrust() %></p>
+                        <p><%= pizza.getSauce()%></p>
+                        <% 
+                            }
+                        }else{
+                        %>
+                        <p>No Data</p>
+                        <% 
+                        }
+                        %>
+                       
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-success mt-3" id="checkoutBtn" onclick="window.location.href='checkout.jsp'" style="width:100%;">Check Out</button>
+            <button type="button" class="btn btn-success mt-3" id="checkoutBtn" onclick="window.location.href='checkout.jsp'" style="width:100%;">Continue Order</button>
         </div>
     </div>
 </div>

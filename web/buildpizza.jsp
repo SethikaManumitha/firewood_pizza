@@ -1,8 +1,8 @@
 <%@ page import="java.util.List" %>
-<%@ page import="model.Crust" %>
-<%@ page import="model.Sauce" %>
-<%@ page import="model.Topping" %>
-<%@ page import="model.Pizza" %>
+<%@ page import="model.Builder.Crust" %>
+<%@ page import="model.Builder.Sauce" %>
+<%@ page import="model.Builder.Topping" %>
+<%@ page import="model.Builder.Pizza" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,12 +43,22 @@
 </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid">
+    <div class="container-fluid" style="height:900px">
         
         
         <div class="form-banner">
             <div class="form-container">
                 <center><h2>Build Your Pizza</h2></center>
+                 <%
+                    String errorMessage = (String) request.getAttribute("errorMessage");
+                    if (errorMessage != null) {
+                %>
+                <script>
+                    alert("<%= errorMessage %>");
+                </script>
+                <%
+                    }
+                %>
                 <form action="build" method="POST">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Name</label>
@@ -145,6 +155,7 @@
                             <input class="form-check-input" type="checkbox" name="topping" id="<%= topping.getName() %>" value="<%= topping.getName() %>" data-price="<%= topping.getPrice() %>">
                             <label class="form-check-label" for="<%= topping.getName() %>"><%= topping.getName() %> (LKR <span class="price"><%= topping.getPrice() %></span>)</label>
                         </div>
+                        <script>console.log(<%= topping.getName() %>)</script>
                         <% 
                             }
                         }
@@ -165,24 +176,19 @@
     </div>
 </div>
 
+                <div class="form-group">
+                    <label for="totalAmountField">Total Amount</label>
+                    <input type="text" class="form-control" id="totalAmountField" name="totalAmountField" readonly>
+                </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="cheese" name="cheese">
                     <label class="form-check-label" for="flexCheckDefault">
                         Include Cheese <span style="color:grey">(Additional Charges May Include)</span>
                     </label>
                 </div>
-                <div class="form-group">
-                    <label for="totalAmountField">Total Amount</label>
-                    <input type="text" class="form-control" id="totalAmountField" name="totalAmountField" readonly>
-                </div>
+                
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="favourite" name="favourite">
-                    <label class="form-check-label" for="favourite">
-                        Save To Favourites
-                    </label>
-                </div>
-                        
+         
                 <div class="row">
                     <div class="col-md-12">
                         <button type="submit" name="submit" value="BuildPizza" class="btn btn-danger mt-3" style="width:100%">Build Pizza</button>                        
@@ -193,28 +199,56 @@
         </div>
                 
         <!-- Basket Section -->
-        <div class="basket">
+        <div class="basket" style="height: 900px">
             <div id="basketContent">
      <% 
                         List<Pizza> pizzas = (List<Pizza>) request.getAttribute("pizzas");
                         if (pizzas != null) {
                             for (Pizza pizza : pizzas) {
                         %>
-                        <p><%= pizza.getName() %></p>
-                        <p><%= pizza.getCrust() %></p>
-                        <p><%= pizza.getSauce()%></p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                  <div class="card">
+                                    <div class="card-body">
+                                      <h5 class="card-title"><%= pizza.getName() %></h5>
+                                      <p class="card-text">
+                                      <ul>
+                                          <li><%= pizza.getCrust() %></li>
+                                          <li><%= pizza.getSauce() %></li>
+                                          <li><%= pizza.getToppings() %></li>
+                                          <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li>                                          
+                                          </ul>
+                                      <hr>
+                                      </p>
+                                      <form action="build" method="POST">
+                                      <input type="hidden" value="<%= pizza.getName() %>" name="namedelete">
+                                      <input type="hidden"  value="<%= session.getAttribute("userEmail") %>" name="emaildelete">
+                                      <button type="submit" name="submit" value="DeletePizza" class="btn btn-danger mt-3">Delete</button>
+                                      </form>
+                                      
+                                      <form action="build" method="POST">
+                                      <input type="hidden" value="<%= pizza.getName() %>" name="namefav">
+                                      <input type="hidden"  value="<%= session.getAttribute("userEmail") %>" name="emailfav">
+                                      <button type="submit" name="submit" value="UpdatePizza" class="btn btn-success mt-3">Add To Favourite</button>
+                                      </form>
+                                      
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                              </div>
+                                      <hr>
                         <% 
                             }
-                        }else{
-                        %>
-                        <p>No Data</p>
-                        <% 
                         }
                         %>
                        
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-success mt-3" id="checkoutBtn" onclick="window.location.href='checkout.jsp'" style="width:100%;">Continue Order</button>
+            <form action="order" method="POST">
+            <input type="text" name="emailOrder" id="emailOrder" value="<%= session.getAttribute("userEmail") %>">
+            <button type="submit" name="submit" value="GetPizza" class="btn btn-success mt-3" style="width:100%">Build Pizza</button>
+            </form>
         </div>
     </div>
 </div>

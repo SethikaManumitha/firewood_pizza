@@ -37,7 +37,7 @@ $(document).ready(function() {
     totalAmount *= quantity;
 
     // Update button and total amount
-    $('#addToCartBtn').text('Add to Cart - LKR ' + totalAmount.toFixed(2));
+    $('#addToCartBtn').text('Build Pizza - LKR ' + totalAmount.toFixed(2));
     $('#totalAmount').text(totalAmount.toFixed(2));
 
     // Assign the total to the text field

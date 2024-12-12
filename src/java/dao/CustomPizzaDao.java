@@ -16,16 +16,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Pizza;
-import model.Crust;
-import model.Sauce;
-import model.Topping;
+import model.Builder.*;
+
 import util.JDBCUtils;
 
 public class CustomPizzaDao {
     private final String INSERT_PIZZA_SQL = "INSERT INTO Pizza (pizzaname, custemail, crust, sauce, topping, size,  pizzastatus,is_favorite,cheese)\n" +
 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
+    private final String DELETE_PIZZA_SQL = "DELETE FROM Pizza WHERE pizzaname = ? AND custemail = ?";
     
    public void insertPizza(Pizza pizza, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
@@ -62,6 +61,19 @@ public class CustomPizzaDao {
     }
 }
    
+   public void deletePizza(String name,String email) throws ClassNotFoundException {
+    try (Connection connection = JDBCUtils.getInstance().getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PIZZA_SQL)) {
+
+        preparedStatement.setString(1, name);
+         preparedStatement.setString(2, email);
+        preparedStatement.executeUpdate();
+        System.out.println("Successfully deleted");
+    } catch (SQLException e) {
+        printSQLException(e);
+    }
+}
+   
     public List<Pizza>  selectAllPizza(String email) {
             
            List<Pizza> pizzaList = new ArrayList<>();
@@ -74,6 +86,7 @@ public class CustomPizzaDao {
                ResultSet rs = preparedStatement.executeQuery();
            
                while(rs.next()){
+                    int id = rs.getInt("pizzaid");
                     String name = rs.getString("pizzaname");
                     String crust = rs.getString("crust");
                     String sauce = rs.getString("sauce"); 

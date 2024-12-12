@@ -2,31 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model;
+package model.Builder;
 
 /**
  *
  * @author MAS
  */
-public class Topping {
-    private int toppingId;
+public class Sauce {
+    private int sauceId;
     private String name;
     private double price;
 
     // Constructor
-    public Topping(int toppingId, String name, double price) {
-        this.toppingId = toppingId;
+    public Sauce(int sauceId, String name, double price) {
+        this.sauceId = sauceId;
         this.name = name;
         this.price = price;
     }
 
     // Getters and Setters
-    public int getToppingId() {
-        return toppingId;
+    public int getSauceId() {
+        return sauceId;
     }
 
-    public void setToppingId(int toppingId) {
-        this.toppingId = toppingId;
+    public void setSauceId(int sauceId) {
+        this.sauceId = sauceId;
     }
 
     public String getName() {
@@ -47,7 +47,7 @@ public class Topping {
 
     @Override
     public String toString() {
-        return "Topping [toppingId=" + toppingId + ", name=" + name + ", price=" + price + "]";
+        return "Sauce [sauceId=" + sauceId + ", name=" + name + ", price=" + price + "]";
     }
 }
 

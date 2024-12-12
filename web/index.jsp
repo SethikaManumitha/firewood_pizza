@@ -171,9 +171,22 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a href="build">
-                <button class="btn view-deals-btn" type="button">Order Now</button>
-                </a>
+                <%
+                if (status == null || !status.equals("logged")) {
+                %>
+                    <a href="login.jsp">
+                    <button class="btn view-deals-btn" type="button">Order Now</button>
+                    </a>
+                <%
+                    }else{
+                %>
+                    <a href="order.jsp">
+                    <button class="btn view-deals-btn" type="button">Order Now</button>
+                    </a>
+                <%
+                }
+                %>
+                
             </div>
         </div> 
     </div>

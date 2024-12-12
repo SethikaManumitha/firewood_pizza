@@ -31,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
             background-color: #fff;
             padding: 20px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            height: 100%;
+            height: 100vh;
         }
         .form-container {
             background: #fff;

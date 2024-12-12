@@ -2,31 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model;
+package model.Builder;
 
 /**
  *
  * @author MAS
  */
-public class Crust {
-    private int crustId;
+public class Topping {
+    private int toppingId;
     private String name;
-    private int price;
+    private double price;
 
     // Constructor
-    public Crust(int crustId, String name, int price) {
-        this.crustId = crustId;
+    public Topping(int toppingId, String name, double price) {
+        this.toppingId = toppingId;
         this.name = name;
         this.price = price;
     }
 
     // Getters and Setters
-    public int getCrustId() {
-        return crustId;
+    public int getToppingId() {
+        return toppingId;
     }
 
-    public void setCrustId(int crustId) {
-        this.crustId = crustId;
+    public void setToppingId(int toppingId) {
+        this.toppingId = toppingId;
     }
 
     public String getName() {
@@ -41,13 +41,13 @@ public class Crust {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
     @Override
     public String toString() {
-        return "Crust [crustId=" + crustId + ", name=" + name + ", price=" + price + "]";
+        return "Topping [toppingId=" + toppingId + ", name=" + name + ", price=" + price + "]";
     }
 }
 

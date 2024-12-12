@@ -45,7 +45,7 @@
             
             <!-- Form Section -->
             <div class="form-banner">
-                <div class="form-container">
+                <div class="form-container" style="background-color: white">
                     <h2>Sign Up</h2>
                     <p>Please fill in the details below to create an account.</p>
                     <form action="insert" method="POST" onsubmit="validateForm(event)">

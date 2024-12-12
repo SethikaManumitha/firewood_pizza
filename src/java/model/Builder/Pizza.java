@@ -1,4 +1,4 @@
-package model;
+package model.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class Pizza {
     private final boolean isFavourite;
     private final String size; 
 
-    private Pizza(Builder builder) {
+    private Pizza(Builder builder) {    
         this.name = builder.name;
         this.crust = builder.crust;
         this.sauce = builder.sauce;
@@ -49,7 +49,7 @@ public class Pizza {
     }
 
     public String getSize() {
-        return size;  // Added getter for size
+        return size;  
     }
 
     

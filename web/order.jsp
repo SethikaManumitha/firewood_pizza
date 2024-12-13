@@ -5,7 +5,6 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Builder.Pizza" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -40,87 +39,67 @@
         %>
     </form>
 </nav>
+        
     <div class="container-fluid">
         
         <div class="row">
             <div class="col-md-8">
+                
                 <div class="row" style="padding:20px">
-                    <div class="col-md-4">
-                        <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="https://placehold.co/600x400/png" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                          <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="https://placehold.co/600x400/png" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                          <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="https://placehold.co/600x400/png" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                          <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                      </div>
-                    </div>
-                </div> 
-                <div class="row" style="padding:20px">
-                    <div class="col-md-4">
-                        <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="https://placehold.co/600x400/png" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                          <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="https://placehold.co/600x400/png" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                          <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="https://placehold.co/600x400/png" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                          <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                      </div>
-                    </div>
-                </div> 
-                <div class="row">
+                    <div class="container-fluid">
+                        
+                    <div class="row">
                     <div class="col-md-12">
                         <a href="build">
                         <button class="btn btn-success" style="width:100%">Build Custom Pizza</button>
                         </a>
                     </div>
+                    </div>
                         
+                    <div class="row" style="padding-top: 20px">
+    <% 
+        List<Pizza> favpizzas = (List<Pizza>) request.getAttribute("favpizzas");
+        if (favpizzas != null && !favpizzas.isEmpty()) {
+            for (int i = 0; i < favpizzas.size(); i++) {
+                Pizza favpizza = favpizzas.get(i);
+                // Open a new row every 3 pizzas
+                if (i % 3 == 0) { 
+    %>
+                    <div class="w-100"></div>
+                <% } %>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="https://placehold.co/600x400/png" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= favpizza.getName() %></h5>
+                            <ul class="card-text">
+                                <li><b>Crust: </b><%= favpizza.getCrust() %></li>
+                                <li><b>Sauce: </b><%= favpizza.getSauce() %></li>
+                                <li><b>Toppings: </b><%= favpizza.getToppings() %></li>
+                            </ul>
+                            <a href="#" class="btn btn-success" style="width:100%;">Add To Cart</a>
+                        </div>
+                    </div>
                 </div>
+    <% 
+            }
+        } else { 
+    %>
+        <div class="col-12">
+            <p class="text-center">No favorite pizzas available.</p>
+        </div>
+    <% } %>
+</div>
+
+                    </div>
+                    
+                    
+                </div> 
+                    
+               
                 
             </div>
-            <div class="col-md-4" style="border-left: 2px solid #ccc">
+            <div class="col-md-4" style="height:900px;border-left: 2px solid #ccc;">
                   <% 
                         List<Pizza> pizzas = (List<Pizza>) request.getAttribute("pizzas");
                         if (pizzas != null) {

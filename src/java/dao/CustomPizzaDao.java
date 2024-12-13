@@ -26,6 +26,9 @@ public class CustomPizzaDao {
     private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
     private final String DELETE_PIZZA_SQL = "DELETE FROM Pizza WHERE pizzaname = ? AND custemail = ?";
     
+    private final String SELECT_PIZZA_FAV_SQL = "SELECT * FROM pizza WHERE pizzaname = ? AND custemail = ? ;";
+    private final String UPDATE_PIZZA_SQL = "UPDATE pizza SET is_favorite = ? WHERE pizzaname = ? AND custemail = ?;";
+    
    public void insertPizza(Pizza pizza, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PIZZA_SQL)) {
@@ -73,6 +76,35 @@ public class CustomPizzaDao {
         printSQLException(e);
     }
 }
+ public void updatePizza(String name, String email) throws ClassNotFoundException {
+    try (Connection connection = JDBCUtils.getInstance().getConnection();
+         PreparedStatement selectStatement = connection.prepareStatement(SELECT_PIZZA_FAV_SQL);
+         PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PIZZA_SQL)) {
+
+        
+        String is_favorite = "0";
+        selectStatement.setString(1, name);
+        selectStatement.setString(2, email);
+        ResultSet rs = selectStatement.executeQuery();
+
+        if (rs.next()) {
+            is_favorite = rs.getString("is_favorite");
+        }
+
+        
+        is_favorite = "0".equals(is_favorite) ? "1" : "0";
+
+        updateStatement.setString(1, is_favorite);
+        updateStatement.setString(2, name);
+        updateStatement.setString(3, email);
+        updateStatement.executeUpdate();
+
+        System.out.println("Successfully updated favorite status.");
+    } catch (SQLException e) {
+        printSQLException(e);
+    }
+}
+
    
     public List<Pizza>  selectAllPizza(String email) {
             

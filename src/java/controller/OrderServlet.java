@@ -19,13 +19,13 @@ public class OrderServlet extends HttpServlet {
 
    
     private CustomPizzaDao customPizzaDao;
-
+    private OrderDao orderDao;
  
 
     @Override
     public void init() {
    
-        customPizzaDao = new CustomPizzaDao();
+        orderDao = new OrderDao();
     
     }
 
@@ -56,7 +56,10 @@ public class OrderServlet extends HttpServlet {
     private void showBuilderForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-          
+            String email = request.getParameter("email");
+            List<Pizza> favpizzas = orderDao.selectFavPizza(email);
+            System.out.println(favpizzas);
+            request.setAttribute("favpizzas", favpizzas);
             RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
             dispatcher.forward(request, response);
         } catch (Exception ex) {
@@ -68,10 +71,16 @@ public class OrderServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             String email = request.getParameter("emailOrder");
-            List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+            List<Pizza> pizzas = orderDao.selectAllPizza(email);
             request.setAttribute("pizzas", pizzas);
             System.out.println(pizzas);
-            showBuilderForm(request, response);
+            
+            List<Pizza> favpizzas = orderDao.selectFavPizza(email);
+            System.out.println(favpizzas);
+            request.setAttribute("favpizzas", favpizzas);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
+            dispatcher.forward(request, response);
+            //showBuilderForm(request, response);
         } catch (Exception ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", ex.getMessage());

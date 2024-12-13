@@ -207,36 +207,43 @@
                             for (Pizza pizza : pizzas) {
                         %>
                             <div class="row">
-                                <div class="col-md-12">
-                                  <div class="card">
-                                    <div class="card-body">
-                                      <h5 class="card-title"><%= pizza.getName() %></h5>
-                                      <p class="card-text">
-                                      <ul>
-                                          <li><%= pizza.getCrust() %></li>
-                                          <li><%= pizza.getSauce() %></li>
-                                          <li><%= pizza.getToppings() %></li>
-                                          <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li>                                          
-                                          </ul>
-                                      <hr>
-                                      </p>
-                                      <form action="build" method="POST">
-                                      <input type="hidden" value="<%= pizza.getName() %>" name="namedelete">
-                                      <input type="hidden"  value="<%= session.getAttribute("userEmail") %>" name="emaildelete">
-                                      <button type="submit" name="submit" value="DeletePizza" class="btn btn-danger mt-3">Delete</button>
-                                      </form>
-                                      
-                                      <form action="build" method="POST">
-                                      <input type="hidden" value="<%= pizza.getName() %>" name="namefav">
-                                      <input type="hidden"  value="<%= session.getAttribute("userEmail") %>" name="emailfav">
-                                      <button type="submit" name="submit" value="UpdatePizza" class="btn btn-success mt-3">Add To Favourite</button>
-                                      </form>
-                                      
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                              </div>
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><%= pizza.getName() %></h5>
+        <p class="card-text">
+          <ul>
+            <li><%= pizza.getCrust() %></li>
+            <li><%= pizza.getSauce() %></li>
+            <li><%= pizza.getToppings() %></li>
+            <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li>
+          </ul>
+          <hr>
+        </p>
+        
+        
+            <div class="row">
+                <div class="col-md-6">
+          <form action="build" method="POST" class="me-2">
+            <input type="hidden" value="<%= pizza.getName() %>" name="namedelete">
+            <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emaildelete">
+            <button type="submit" name="submit" value="DeletePizza" class="btn btn-danger" style="width:100%">Delete</button>
+          </form>
+                </div>
+            <div class="col-md-6">
+          <form action="build" method="POST">
+            <input type="hidden" value="<%= pizza.getName() %>" name="namefav">
+            <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emailfav">
+            <button type="submit" name="submit" value="UpdatePizza" class="btn btn-success" style="width:100%">Add To Favourite</button>
+          </form>
+            </div>
+           
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
                                       <hr>
                         <% 
                             }
@@ -246,7 +253,7 @@
     <div class="row">
         <div class="col-md-12">
             <form action="order" method="POST">
-            <input type="text" name="emailOrder" id="emailOrder" value="<%= session.getAttribute("userEmail") %>">
+            <input type="hidden" name="emailOrder" id="emailOrder" value="<%= session.getAttribute("userEmail") %>">
             <button type="submit" name="submit" value="GetPizza" class="btn btn-success mt-3" style="width:100%">Build Pizza</button>
             </form>
         </div>

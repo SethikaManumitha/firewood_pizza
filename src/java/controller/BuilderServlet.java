@@ -57,6 +57,8 @@ public class BuilderServlet extends HttpServlet {
                 buildPizza(request, response);
             } else if ("DeletePizza".equals(formAction)) {
                 deletePizza(request, response);
+            } else if ("UpdatePizza".equals(formAction)) {
+                updatePizza(request, response);
             } else {
                 showBuilderForm(request, response);
             }
@@ -137,6 +139,26 @@ public class BuilderServlet extends HttpServlet {
 
             // Delete pizza from database
             customPizzaDao.deletePizza(name, email);
+
+            // Fetch updated pizza list and display
+            List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+            request.setAttribute("pizzas", pizzas);
+            showBuilderForm(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("errorMessage", "Failed to delete pizza: " + ex.getMessage());
+            showBuilderForm(request, response);
+        }
+    }
+    
+    private void updatePizza(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String name = request.getParameter("namefav");
+            String email = request.getParameter("emailfav");
+
+            // Delete pizza from database
+            customPizzaDao.updatePizza(name, email);
 
             // Fetch updated pizza list and display
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);

@@ -180,9 +180,10 @@
                 <%
                     }else{
                 %>
-                    <a href="order.jsp">
-                    <button class="btn view-deals-btn" type="button">Order Now</button>
-                    </a>
+                <form action="order" method="POST">
+                    <input type="text" value="<%= session.getAttribute("userEmail") %>" name="email" id="email">
+                    <button type="submit" class="btn view-deals-btn">Order Now</button>
+                </form>
                 <%
                 }
                 %>

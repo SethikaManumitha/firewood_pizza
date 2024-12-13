@@ -21,8 +21,8 @@ import model.Builder.*;
 import util.JDBCUtils;
 
 public class CustomPizzaDao {
-    private final String INSERT_PIZZA_SQL = "INSERT INTO Pizza (pizzaname, custemail, crust, sauce, topping, size,  pizzastatus,is_favorite,cheese)\n" +
-"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private final String INSERT_PIZZA_SQL = "INSERT INTO Pizza (pizzaname, custemail, crust, sauce, topping, size,  pizzastatus,is_favorite,cheese,price,qty)\n" +
+"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
     private final String DELETE_PIZZA_SQL = "DELETE FROM Pizza WHERE pizzaname = ? AND custemail = ?";
     
@@ -54,7 +54,9 @@ public class CustomPizzaDao {
        
         preparedStatement.setBoolean(7, pizza.isFavourite());
         preparedStatement.setBoolean(8, pizza.isIncludeCheese());
-         preparedStatement.setInt(9, 0);
+        preparedStatement.setInt(9, 0);
+        preparedStatement.setDouble(10, pizza.getPrice());
+        preparedStatement.setInt(11, pizza.getQty());
         
         preparedStatement.executeUpdate();
         System.out.println("Success");
@@ -130,7 +132,8 @@ public class CustomPizzaDao {
                     
                     String is_favourite = rs.getString("is_favorite"); 
                     String cheese = rs.getString("cheese"); 
-                    
+                    float price = rs.getFloat("price");
+                    int qty = rs.getInt("qty");
                     Pizza pizza = new Pizza.Builder()
                     .setName(name)
                     .setCrust(crust)
@@ -139,6 +142,8 @@ public class CustomPizzaDao {
                     .addToppings(toppings)
                     .includeCheese(true)
                     .setIsFavourite(true)
+                    .setPrice(price)
+                    .setQty(qty)
                     .build();
                     
                     pizzaList.add(pizza);

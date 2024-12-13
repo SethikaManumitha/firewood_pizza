@@ -191,7 +191,7 @@
          
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="submit" name="submit" value="BuildPizza" class="btn btn-danger mt-3" style="width:100%">Build Pizza</button>                        
+                        <button type="submit" name="submit" value="BuildPizza" class="btn btn-danger mt-3" id="new" style="width:100%">Build Pizza</button>                        
                     </div>
                 </div>
                 </form>          
@@ -213,12 +213,17 @@
         <h5 class="card-title"><%= pizza.getName() %></h5>
         <p class="card-text">
           <ul>
-            <li><%= pizza.getCrust() %></li>
-            <li><%= pizza.getSauce() %></li>
-            <li><%= pizza.getToppings() %></li>
-            <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li>
+            <li>SIZE: <%= pizza.getSize() %></li>
+            <li>CRUST: <%= pizza.getCrust() %></li>
+            <li>SAUCE: <%= pizza.getSauce() %></li>
+            <li>TOPPINGS: <%= pizza.getToppings() %></li>
+            <li>INCLUDE CHEESE: <%= pizza.isIncludeCheese() ? "Yes" : "No" %></li>
+            <li>QTY :<%= pizza.getQty() %></li>
+            <li>PRICE :<%= pizza.getPrice() %></li>
+            
           </ul>
           <hr>
+          <h3>TOTAL: <b>LKR.<%= pizza.getPrice() * pizza.getQty() %></b></h3>
         </p>
         
         
@@ -254,7 +259,7 @@
         <div class="col-md-12">
             <form action="order" method="POST">
             <input type="hidden" name="emailOrder" id="emailOrder" value="<%= session.getAttribute("userEmail") %>">
-            <button type="submit" name="submit" value="GetPizza" class="btn btn-success mt-3" style="width:100%">Build Pizza</button>
+            <button type="submit" name="submit" value="GetPizza" class="btn btn-success mt-3" style="width:100%">Continue To Cart</button>
             </form>
         </div>
     </div>

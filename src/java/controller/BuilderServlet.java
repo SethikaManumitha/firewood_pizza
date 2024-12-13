@@ -102,7 +102,8 @@ public class BuilderServlet extends HttpServlet {
             String size = request.getParameter("size");
             boolean isCheeseIncluded = request.getParameter("includeCheese") != null;
             boolean isFavourite = request.getParameter("isFavourite") != null;
-
+            float price = Float.parseFloat(request.getParameter("totalAmountField")); 
+            int qty = Integer.parseInt(request.getParameter("txtqty")); 
             // Build the pizza object
             Pizza pizza = new Pizza.Builder()
                     .setName(name)
@@ -112,6 +113,8 @@ public class BuilderServlet extends HttpServlet {
                     .addToppings(toppingsArray)
                     .includeCheese(isCheeseIncluded)
                     .setIsFavourite(isFavourite)
+                    .setPrice(price)
+                    .setQty(qty)
                     .build();
 
             

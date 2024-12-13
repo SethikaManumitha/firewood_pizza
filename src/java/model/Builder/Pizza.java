@@ -11,6 +11,8 @@ public class Pizza {
     private final boolean includeCheese;
     private final boolean isFavourite;
     private final String size; 
+    private final float price; 
+    private final int qty;     
 
     private Pizza(Builder builder) {    
         this.name = builder.name;
@@ -20,6 +22,8 @@ public class Pizza {
         this.includeCheese = builder.includeCheese;
         this.isFavourite = builder.isFavourite;
         this.size = builder.size; 
+        this.price = builder.price; 
+        this.qty = builder.qty;     
     }
 
     // Getters
@@ -43,7 +47,6 @@ public class Pizza {
         return includeCheese;
     }
 
-
     public boolean isFavourite() {
         return isFavourite;
     }
@@ -52,7 +55,14 @@ public class Pizza {
         return size;  
     }
 
-    
+    public float getPrice() {
+        return price;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
     // Builder class
     public static class Builder {
         private String name;
@@ -62,6 +72,8 @@ public class Pizza {
         private boolean includeCheese = false; 
         private boolean isFavourite = false;
         private String size = ""; 
+        private float price; 
+        private int qty;        
 
         // Setters
         public Builder setName(String name) {
@@ -80,20 +92,18 @@ public class Pizza {
         }
 
         public Builder addToppings(String[] toppingsArray) {
-        if (toppingsArray != null) {
-            for (String topping : toppingsArray) {
-                this.toppings.add(topping);
+            if (toppingsArray != null) {
+                for (String topping : toppingsArray) {
+                    this.toppings.add(topping);
+                }
             }
+            return this;
         }
-        return this;
-    }
 
         public Builder includeCheese(boolean includeCheese) {
             this.includeCheese = includeCheese;
             return this;
         }
-
-       
 
         public Builder setIsFavourite(boolean isFavourite) {
             this.isFavourite = isFavourite;
@@ -102,6 +112,16 @@ public class Pizza {
 
         public Builder setSize(String size) {
             this.size = size;
+            return this;
+        }
+
+        public Builder setPrice(float price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder setQty(int qty) {
+            this.qty = qty;
             return this;
         }
 

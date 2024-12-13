@@ -76,6 +76,7 @@
                                 <li><b>Crust: </b><%= favpizza.getCrust() %></li>
                                 <li><b>Sauce: </b><%= favpizza.getSauce() %></li>
                                 <li><b>Toppings: </b><%= favpizza.getToppings() %></li>
+                                <li><b>Price: </b> LKR.<%= favpizza.getPrice()%></li>
                             </ul>
                             <a href="#" class="btn btn-success" style="width:100%;">Add To Cart</a>
                         </div>
@@ -115,9 +116,12 @@
                                           <li><%= pizza.getCrust() %></li>
                                           <li><%= pizza.getSauce() %></li>
                                           <li><%= pizza.getToppings() %></li>
-                                          <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li>                                          
+                                          <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li> 
+                                        <li>QTY :<%= pizza.getQty() %></li>
+                                        <li>PRICE :<%= pizza.getPrice() %></li>
                                           </ul>
-                                      <hr>
+                                          <hr>
+                                          <h4>TOTAL: <b>LKR.<%= pizza.getPrice() * pizza.getQty() %></b></h4>
                                       </p>
                                       
                                     </div>

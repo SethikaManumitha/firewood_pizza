@@ -49,6 +49,8 @@ public class OrderDao {
                     
                     String is_favourite = rs.getString("is_favorite"); 
                     String cheese = rs.getString("cheese"); 
+                    float price = rs.getFloat("price");
+                    int qty = rs.getInt("qty");
                     
                     Pizza pizza = new Pizza.Builder()
                     .setName(name)
@@ -58,6 +60,8 @@ public class OrderDao {
                     .addToppings(toppings)
                     .includeCheese(true)
                     .setIsFavourite(true)
+                    .setPrice(price)
+                    .setQty(qty)
                     .build();
                     
                     pizzaList.add(pizza);
@@ -89,7 +93,8 @@ public class OrderDao {
                     String[] toppings = toppingString.split(",");
                     
                     String size = rs.getString("size"); 
-                    
+                    float price = rs.getFloat("price");
+                    int qty = rs.getInt("qty");
                     Pizza pizza = new Pizza.Builder()
                     .setName(name)
                     .setCrust(crust)
@@ -98,6 +103,8 @@ public class OrderDao {
                     .addToppings(toppings)
                     .includeCheese(true)
                     .setIsFavourite(true)
+                    .setPrice(price)
+                    .setQty(qty)
                     .build();
                     
                     pizzaList.add(pizza);

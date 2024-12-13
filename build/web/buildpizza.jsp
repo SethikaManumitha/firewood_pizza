@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label for="exampleInputEmail1">Name</label>
                     <input type="text" class="form-control" id="txtname" name="txtname" aria-describedby="name" placeholder="Enter Name For Your Pizza">
-                    <input type="hidden" name="email" id="email" value="<%= session.getAttribute("userEmail") %>">
+                    <input type="text" name="email" id="email" value="<%= session.getAttribute("userEmail") %>">
                 </div>
                 <!-- Size Dropdown -->
                 <div class="form-group">
@@ -163,20 +163,9 @@
                         
                     </div>
                 </div>
-                <div class="form-group">
-    <label for="quantity">Quantity</label>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary" type="button" id="decrementQty">-</button>
-        </div>
-        <input type="text" class="form-control text-center" id="txtqty" name="txtqty" value="1" readonly>
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="incrementQty">+</button>
-        </div>
-    </div>
-</div>
+                
 
-                <div class="form-group">
+               <div class="form-group">
                     <label for="totalAmountField">Total Amount</label>
                     <input type="text" class="form-control" id="totalAmountField" name="totalAmountField" readonly>
                 </div>
@@ -206,29 +195,26 @@
                         if (pizzas != null) {
                             for (Pizza pizza : pizzas) {
                         %>
-                            <div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title"><%= pizza.getName() %></h5>
-        <p class="card-text">
-          <ul>
-            <li>SIZE: <%= pizza.getSize() %></li>
-            <li>CRUST: <%= pizza.getCrust() %></li>
-            <li>SAUCE: <%= pizza.getSauce() %></li>
-            <li>TOPPINGS: <%= pizza.getToppings() %></li>
-            <li>INCLUDE CHEESE: <%= pizza.isIncludeCheese() ? "Yes" : "No" %></li>
-            <li>QTY :<%= pizza.getQty() %></li>
-            <li>PRICE :<%= pizza.getPrice() %></li>
-            
-          </ul>
-          <hr>
-          <h3>TOTAL: <b>LKR.<%= pizza.getPrice() * pizza.getQty() %></b></h3>
-        </p>
-        
-        
-            <div class="row">
-                <div class="col-md-6">
+                            <div class="row" style="padding-top: 20px">
+                                <div class="col-md-12">
+                                  <div class="card">
+                                    <div class="card-body">
+                                      <h5 class="card-title"><%= pizza.getName() %></h5>
+                                      <p class="card-text">
+                                      <ul>
+                                          <li><%= pizza.getCrust() %></li>
+                                          <li><%= pizza.getSauce() %></li>
+                                          <li><%= pizza.getToppings() %></li>
+                                          <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li> 
+                                        
+                                         
+                                        <li id="unitPrice">PRICE :<%= pizza.getPrice() %></li>
+                                          </ul>
+                                          <hr>
+                                          <h4>TOTAL: <b id="totalAmount">LKR.<%= pizza.getPrice()%></b></h4>
+                                      </p>
+                                       <div class="row">
+          <div class="col-md-6">
           <form action="build" method="POST" class="me-2">
             <input type="hidden" value="<%= pizza.getName() %>" name="namedelete">
             <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emaildelete">
@@ -242,12 +228,14 @@
             <button type="submit" name="submit" value="UpdatePizza" class="btn btn-success" style="width:100%">Add To Favourite</button>
           </form>
             </div>
-           
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                              </div>
+                                      <hr>
+                       
+            </div>
 
                                       <hr>
                         <% 
@@ -267,7 +255,6 @@
 
         </div>
     </div>
-
     <script src="assets/js/buildpizza.js"></script>
 </body>
 </html>

@@ -33,7 +33,7 @@ $(document).ready(function() {
 
     $('#totalAmountField').val(totalAmount);
     selectedSauce = $('input[name="sauce"]:checked').next('label').text();
-    quantity = parseInt($('#txtqty').val());
+    //quantity = parseInt($('#txtqty').val());
     totalAmount *= quantity;
 
     // Update button and total amount
@@ -54,19 +54,7 @@ $(document).ready(function() {
         dropdownContainer.slideToggle();
     });
     
-    $('#decrementQty').click(function() {
-    let currentQty = parseInt($('#txtqty').val());
-    if (currentQty > 1) {
-        $('#txtqty').val(currentQty - 1);
-        calculateTotal();
-    }
-});
 
-$('#incrementQty').click(function() {
-    let currentQty = parseInt($('#txtqty').val());
-    $('#txtqty').val(currentQty + 1);
-    calculateTotal();
-});
     
 
     // Size change event
@@ -166,6 +154,7 @@ $('#incrementQty').click(function() {
     calculateTotal();
     // Other actions can be added here
     });
+    
 
 });
 

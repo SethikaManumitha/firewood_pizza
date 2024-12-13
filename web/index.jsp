@@ -98,12 +98,11 @@
             font-weight: bold;
         }
         
-                /* Default button styles */
         .btn-group-toggle .btn {
-            width: 50%; /* Distribute buttons evenly */
+            width: 50%; 
             text-align: center;
             border: 1px solid #ccc;
-            transition: all 0.3s ease; /* Smooth transition for style changes */
+            transition: all 0.3s ease; 
         }
 
         /* Styles for the selected button */
@@ -181,7 +180,7 @@
                     }else{
                 %>
                 <form action="order" method="POST">
-                    <input type="text" value="<%= session.getAttribute("userEmail") %>" name="email" id="email">
+                    <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="email" id="email">
                     <button type="submit" class="btn view-deals-btn">Order Now</button>
                 </form>
                 <%

@@ -80,7 +80,11 @@ public class BuilderServlet extends HttpServlet {
 
             List<Topping> toppings = toppingDao.selectAllToppings();
             request.setAttribute("toppings", toppings);
-
+            
+            String email = request.getParameter("email");
+            List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+            request.setAttribute("pizzas", pizzas);
+            
             RequestDispatcher dispatcher = request.getRequestDispatcher("buildpizza.jsp");
             dispatcher.forward(request, response);
         } catch (Exception ex) {
@@ -103,7 +107,7 @@ public class BuilderServlet extends HttpServlet {
             boolean isCheeseIncluded = request.getParameter("includeCheese") != null;
             boolean isFavourite = request.getParameter("isFavourite") != null;
             float price = Float.parseFloat(request.getParameter("totalAmountField")); 
-            int qty = Integer.parseInt(request.getParameter("txtqty")); 
+            int qty = 1; 
             // Build the pizza object
             Pizza pizza = new Pizza.Builder()
                     .setName(name)
@@ -146,7 +150,8 @@ public class BuilderServlet extends HttpServlet {
             // Fetch updated pizza list and display
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
             request.setAttribute("pizzas", pizzas);
-            showBuilderForm(request, response);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("buildpizza.jsp");
+            dispatcher.forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", "Failed to delete pizza: " + ex.getMessage());
@@ -166,7 +171,8 @@ public class BuilderServlet extends HttpServlet {
             // Fetch updated pizza list and display
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
             request.setAttribute("pizzas", pizzas);
-            showBuilderForm(request, response);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("buildpizza.jsp");
+            dispatcher.forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", "Failed to delete pizza: " + ex.getMessage());

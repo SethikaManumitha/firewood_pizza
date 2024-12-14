@@ -12,7 +12,8 @@
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">  
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
         <title>Order Page</title>
     </head>
     <body>
@@ -82,15 +83,13 @@
                                 <li><b>Toppings: </b><%= favpizza.getToppings() %></li>
                                 <li><b>Price: </b> LKR.<%= favpizza.getPrice()%></li>
                             </ul>
-                            <form mehod="POST">
-                        
-                            <input type="hidden" name="pizzaName" value="<%= favpizza.getName() %>">
-                            <input type="hidden" name="pizzaCrust" value="<%= favpizza.getCrust() %>">
-                            <input type="hidden" name="pizzaSauce" value="<%= favpizza.getSauce() %>">
-                            <input type="hidden" name="pizzaToppings" value="<%= favpizza.getToppings() %>">
-                            <input type="hidden" name="pizzaPrice" value="<%= favpizza.getPrice() %>">
-                            <button tpye="button" value="GetFavPizza" class="btn btn-success" style="width:100%;">Add To Cart</a>
-                            </form>
+                          
+                             <form action="order" method="POST">
+            <input type="hidden" value="<%= favpizza.getName() %>" name="nameadd">
+            <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emailadd">
+            <button type="submit" name="submit" value="AddToCart" class="btn btn-success" style="width:100%">Add To Favourite</button>
+          </form>   
+
                         </div>
                     </div>
                 </div>
@@ -115,13 +114,13 @@
             <div class="col-md-4" style="height:900px;border-left: 2px solid #ccc;padding-top:20px">
                     <button type="button" class="btn btn-success" style="width: 100%" data-toggle="modal" data-target="#exampleModal">Checkout</button>
                   <% 
+                        float totalPrice = 0;
                         List<Pizza> pizzas = (List<Pizza>) request.getAttribute("pizzas");
                         if (pizzas != null) {
                             for (Pizza pizza : pizzas) {
                         %>
-                            <div class="row" style="padding-top: 20px">
-                                <div class="col-md-12">
-                                  <div class="card">
+                                    
+                                  <div class="card" style="margin-top: 20px">
                                     <div class="card-body">
                                       <h5 class="card-title"><%= pizza.getName() %></h5>
                                       <p class="card-text">
@@ -131,44 +130,48 @@
                                           <li><%= pizza.getToppings() %></li>
                                           <li><%= pizza.isIncludeCheese() ? "Yes" : "No" %></li> 
                                         
-                                          <li> <div class="form-group">
+                                          <li> 
+                                              <div class="form-group">
                                             <label for="qty">Quantity</label>
                                             <div class="input-group">
     <button type="button" class="btn btn-secondary" onclick="decreaseQty(this)">-</button>
     <input type="number" class="form-control" id="qty" name="qty" value="1" min="1" readonly>
     <button type="button" class="btn btn-secondary" onclick="increaseQty(this)">+</button>
 </div>
-                                              </div></li>
+                                              </div>
+                                          </li>
                                         <li id="unitPrice">PRICE :<%= pizza.getPrice() %></li>
                                           </ul>
                                           <hr>
                                           <h4>TOTAL: <b id="totalAmount">LKR.<%= pizza.getPrice()%></b></h4>
+                                          <%= totalPrice = totalPrice + pizza.getPrice() %>
+                                             <div class="row">
+                                        <div class="col-md-6">
+                                        <form action="order" method="POST" class="me-2">
+                                          <input type="hidden" value="<%= pizza.getName() %>" name="namedelete">
+                                          <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emaildelete">
+                                          <button type="submit" name="submit" value="DeletePizza" class="btn btn-danger" style="width:100%">Delete</button>
+                                        </form>
+                                              </div>
+                                          <div class="col-md-6">
+                                        <form action="order" method="POST">
+                                          <input type="hidden" value="<%= pizza.getName() %>" name="namefav">
+                                          <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emailfav">
+                                          <button type="submit" name="submit" value="UpdatePizza" class="btn btn-success" style="width:100%">Add To Favourite</button>
+                                        </form>
+                                          </div>
                                       </p>
-                                       <div class="row">
-          <div class="col-md-6">
-          <form action="order" method="POST" class="me-2">
-            <input type="hidden" value="<%= pizza.getName() %>" name="namedelete">
-            <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emaildelete">
-            <button type="submit" name="submit" value="DeletePizza" class="btn btn-danger" style="width:100%">Delete</button>
-          </form>
-                </div>
-            <div class="col-md-6">
-          <form action="order" method="POST">
-            <input type="hidden" value="<%= pizza.getName() %>" name="namefav">
-            <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emailfav">
-            <button type="submit" name="submit" value="UpdatePizza" class="btn btn-success" style="width:100%">Add To Favourite</button>
-          </form>
-            </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                              </div>
                                       <hr>
+                                      
+                                       </div>
+                                  </div>
+                              
+                                      
                         <% 
                             }
                         }
                         %>
+                       
             </div>
         </div>
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -181,38 +184,58 @@
         </button>
       </div>
       <div class="modal-body">
-            <form>
-                <div class="form-group">
-                    <label for="paymentMethod">Select Payment Method</label>
-                    <select class="form-control" id="paymentMethod">
-                        <option>Credit/Debit Card</option>
-                        <option>PayPal</option>
-                        <option>Bank Transfer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="cardNumber">Card Number</label>
-                    <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
-                </div>
-                <div class="form-group">
-                    <label for="expiryDate">Expiry Date</label>
-                    <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
-                </div>
-                <div class="form-group">
-                    <label for="cvv">CVV</label>
-                    <input type="password" class="form-control" id="cvv" placeholder="Enter CVV">
-                </div>
-            </form>
+            <form action="order" method="post">
+            <input type="text" value="<%= session.getAttribute("userEmail") %>" name="emailOrder" id="emailOrder">    
+             <input type="text" value="<%= totalPrice %>">
+            <div class="form-group">
+      <label for="date">Date:</label>
+      <input type="date" class="form-control" id="date" name="date" required>
+    </div>
+               <div class="form-group">
+    <label for="address">Address:</label>
+    <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+  </div>
+              <hr>
+            <div class="mb-3">
+            <label for="paymentMethod" class="form-label">Payment Method:</label>
+            <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                <option value="" selected disabled>Select a payment method</option>
+                <option value="creditCard">Credit Card</option>
+                <option value="digitalWallet">Digital Wallet</option>
+                <option value="loyaltyProgram">Loyalty Program</option>
+            </select>
+            <div class="invalid-feedback">
+                Please select a payment method.
+            </div>
+        </div>
+       
+        <div id="creditCardDetails" class="mb-3" style="display:none;">
+            <label for="cardNumber" class="form-label">Card Number:</label>
+            <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Enter your card number" />
+        </div>
+
+        <div id="digitalWalletDetails" class="mb-3" style="display:none;">
+            <label for="walletId" class="form-label">Wallet ID:</label>
+            <input type="text" class="form-control" id="walletId" name="walletId" placeholder="Enter your wallet ID" />
+        </div>
+
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount:</label>
+            <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount to pay" required />
+            <div class="invalid-feedback">
+                Please enter a valid amount.
+            </div>
+        </div>
+        <button type="submit" name="submit" class="btn btn-success" value="ProcessPayment" style="width:100%">Pay</button>
+  
+    </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      
     </div>
   </div>
 </div>
     </div>
-            
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
             <script>
              function updateTotal(qtyInput) {
     // Get the quantity and unit price
@@ -242,8 +265,11 @@ function decreaseQty(button) {
     }
 }
 
-
-
+const paymentMethodSelect = document.querySelector('[name="paymentMethod"]');
+    paymentMethodSelect.addEventListener('change', () => {
+        document.getElementById('creditCardDetails').style.display = paymentMethodSelect.value === 'creditCard' ? 'block' : 'none';
+        document.getElementById('digitalWalletDetails').style.display = paymentMethodSelect.value === 'digitalWallet' ? 'block' : 'none';
+    });
             </script>    
     
     </body>

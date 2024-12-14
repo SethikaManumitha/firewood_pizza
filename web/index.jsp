@@ -162,10 +162,10 @@
         <h1>START YOUR ORDER</h1>
         <div class="btn-group btn-group-toggle mb-3 w-100" data-toggle="buttons">
             <label class="btn btn-light">
-                <input type="radio" name="options" id="deliver" autocomplete="off"> <i class="fas fa-motorcycle"></i> Deliver
+                <input type="radio" name="options" id="deliver" value="Deliver" autocomplete="off"> <i class="fas fa-motorcycle"></i> Deliver
             </label>
             <label class="btn btn-light">
-                <input type="radio" name="options" id="collect" autocomplete="off"> <i class="fas fa-map-marker-alt"></i> Pick Up
+                <input type="radio" name="options" id="collect" value="Pick Up" autocomplete="off"> <i class="fas fa-map-marker-alt"></i> Pick Up
             </label>
         </div>
         <div class="row">
@@ -180,6 +180,7 @@
                     }else{
                 %>
                 <form action="order" method="POST">
+                    <input type="hidden" name="deliveryOption" id="deliveryOption">
                     <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="email" id="email">
                     <button type="submit" class="btn view-deals-btn">Order Now</button>
                 </form>
@@ -223,6 +224,27 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39jFES/heMQPyh39jO5p8N" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFwAIlUjK9M9GqOUcmgfM0XKp4" crossorigin="anonymous"></script>
     <script src="assets/js/index.js"> </script>
-  
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the radio buttons and the hidden input field
+        const deliverRadio = document.getElementById("deliver");
+        const collectRadio = document.getElementById("collect");
+        const deliveryOptionField = document.getElementById("deliveryOption");
+
+        // Add event listeners to update the hidden field
+        deliverRadio.addEventListener("change", function () {
+            if (deliverRadio.checked) {
+                deliveryOptionField.value = "Deliver";
+            }
+        });
+
+        collectRadio.addEventListener("change", function () {
+            if (collectRadio.checked) {
+                deliveryOptionField.value = "Pick Up";
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

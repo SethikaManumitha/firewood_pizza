@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 import model.Builder.*;
 import dao.*;
-
+import model.stratergy.*;
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
 
@@ -45,12 +45,14 @@ public class OrderServlet extends HttpServlet {
                 getPizza(request, response);
             }else if ("BuildOrder".equals(formAction)) {
                 buildOrder(request, response);
+            }else if ("ProcessPayment".equals(formAction)) {
+                ProcessPayment(request, response);
             }else if ("DeletePizza".equals(formAction)) {
                 deletePizza(request, response);
             } else if ("UpdatePizza".equals(formAction)) {
                 updatePizza(request, response);
-            }else if ("GetFavPizza".equals(formAction)) {
-                buildOrder(request, response);
+            }else if ("AddToCart".equals(formAction)) {
+                addToCart(request, response);
             }else {
                 showBuilderForm(request, response);
             }
@@ -64,8 +66,10 @@ public class OrderServlet extends HttpServlet {
      private void showBuilderForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            String deliveryOption = request.getParameter("deliveryOption");
             String email = request.getParameter("email");
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+             request.setAttribute("option", deliveryOption);
             request.setAttribute("pizzas", pizzas);
             List<Pizza> favpizzas = orderDao.selectFavPizza(email);
             System.out.println(favpizzas);
@@ -84,7 +88,7 @@ public class OrderServlet extends HttpServlet {
             String email = request.getParameter("emaildelete");
 
             // Delete pizza from database
-            customPizzaDao.deletePizza(name, email);
+            orderDao.updatePizzaDel(name, email);
 
             // Fetch updated pizza list and display
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
@@ -106,11 +110,91 @@ public class OrderServlet extends HttpServlet {
         try {
             String name = request.getParameter("namefav");
             String email = request.getParameter("emailfav");
-
+            
             // Delete pizza from database
             customPizzaDao.updatePizza(name, email);
 
             // Fetch updated pizza list and display
+            List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+            request.setAttribute("pizzas", pizzas);
+            List<Pizza> favpizzas = orderDao.selectFavPizza(email);
+            System.out.println(favpizzas);
+            request.setAttribute("favpizzas", favpizzas);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("errorMessage", "Failed to delete pizza: " + ex.getMessage());
+            showBuilderForm(request, response);
+        }
+    }
+    
+    private void ProcessPayment(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+            
+            String date = request.getParameter("date");
+            String address = request.getParameter("address");
+            String optionOrder = request.getParameter("optionOrder");
+            
+            String email = request.getParameter("emailOrder");
+            List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+            request.setAttribute("pizzas", pizzas);
+            
+            
+            int loyaltyPoints = 0; 
+            String paymentMethod = request.getParameter("paymentMethod");
+            double amount = Double.parseDouble(request.getParameter("amount"));
+            
+            PaymentContext paymentContext = new PaymentContext();
+            
+            switch (paymentMethod) {
+            case "creditCard":
+                String cardNumber = request.getParameter("cardNumber");
+                paymentContext.setPaymentStrategy(new CreditCardPayment(cardNumber));
+                break;
+
+            case "digitalWallet":
+                String walletId = request.getParameter("walletId");
+                paymentContext.setPaymentStrategy(new DigitalWalletPayment(walletId));
+                break;
+
+            case "loyaltyProgram":
+                paymentContext.setPaymentStrategy(new LoyaltyProgramPayment(loyaltyPoints));
+                break;
+
+            default:
+                System.out.println("Invalid payment method selected.");
+        }
+        
+        try {
+            paymentContext.pay(amount);
+
+            
+            if ("loyaltyProgram".equals(paymentMethod)) {
+                loyaltyPoints += (int) (amount / 10); 
+                System.out.println(loyaltyPoints);
+            }
+
+            response.getWriter().write("Payment processed successfully!");
+            System.out.println("Payment processed successfully!");
+        } catch (IllegalStateException e) {
+            response.getWriter().write("Payment failed: " + e.getMessage());
+            System.out.println("Payment failed");
+        }
+       
+    }
+    
+     private void addToCart(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            System.out.println("test");
+            String name = request.getParameter("nameadd");
+            String email = request.getParameter("emailadd");
+            orderDao.updatePizza(name, email);
+            
+            System.out.println(name);
+            System.out.println(email);
+           
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
             request.setAttribute("pizzas", pizzas);
             List<Pizza> favpizzas = orderDao.selectFavPizza(email);

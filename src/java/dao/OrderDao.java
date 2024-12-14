@@ -22,9 +22,10 @@ import util.JDBCUtils;
 
 public class OrderDao {
     
+    private final String UPDATE_PIZZA_DEL_SQL = "UPDATE pizza SET pizzastatus = 2 WHERE pizzaname = ? AND custemail = ? ;";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
-    private final String SELECT_PIZZA_FAV_SQL = "SELECT * FROM pizza WHERE is_favorite = 1 AND custemail = ? ;";
-   
+    private final String SELECT_PIZZA_FAV_SQL = "SELECT * FROM pizza WHERE is_favorite = 1 AND  custemail = ? ;";
+    private final String UPDATE_PIZZA_FAV_SQL = "UPDATE pizza SET pizzastatus = 0 WHERE pizzaname = ? AND custemail = ? ;";
     public List<Pizza>  selectAllPizza(String email) {
             
            List<Pizza> pizzaList = new ArrayList<>();
@@ -72,6 +73,35 @@ public class OrderDao {
             return pizzaList;
         }
     
+     public void updatePizza(String name, String email) throws ClassNotFoundException {
+    try (Connection connection = JDBCUtils.getInstance().getConnection();
+         PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PIZZA_FAV_SQL)) {
+        
+      
+        updateStatement.setString(1, name);
+        updateStatement.setString(2, email);
+        updateStatement.executeUpdate();
+
+        System.out.println("Successfully updated pizza status.");
+    } catch (SQLException e) {
+        printSQLException(e);
+    }
+}
+     
+      public void updatePizzaDel(String name, String email) throws ClassNotFoundException {
+    try (Connection connection = JDBCUtils.getInstance().getConnection();
+         PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PIZZA_DEL_SQL)) {
+        
+      
+        updateStatement.setString(1, name);
+        updateStatement.setString(2, email);
+        updateStatement.executeUpdate();
+
+        System.out.println("Successfully deleted pizza status.");
+    } catch (SQLException e) {
+        printSQLException(e);
+    }
+}
     public List<Pizza>  selectFavPizza(String email) {
             
            List<Pizza> pizzaList = new ArrayList<>();

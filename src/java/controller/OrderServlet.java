@@ -134,13 +134,18 @@ public class OrderServlet extends HttpServlet {
             
             String date = request.getParameter("date");
             String address = request.getParameter("address");
-            String optionOrder = request.getParameter("optionOrder");
-            
+            String optionOrder = request.getParameter("deliveryOption");
+            String netTotal = request.getParameter("nettotal");
             String email = request.getParameter("emailOrder");
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+            System.out.println(pizzas);
             request.setAttribute("pizzas", pizzas);
             
-            
+            System.out.println(date);
+            System.out.println(address);
+            System.out.println(optionOrder);
+            System.out.println(netTotal);
+            System.out.println(email);
             int loyaltyPoints = 0; 
             String paymentMethod = request.getParameter("paymentMethod");
             double amount = Double.parseDouble(request.getParameter("amount"));

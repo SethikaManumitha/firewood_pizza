@@ -87,7 +87,7 @@
                              <form action="order" method="POST">
             <input type="hidden" value="<%= favpizza.getName() %>" name="nameadd">
             <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emailadd">
-            <button type="submit" name="submit" value="AddToCart" class="btn btn-success" style="width:100%">Add To Favourite</button>
+            <button type="submit" name="submit" value="AddToCart" class="btn btn-success" style="width:100%">Add To Cart</button>
           </form>   
 
                         </div>
@@ -112,7 +112,7 @@
                 
             </div>
             <div class="col-md-4" style="height:900px;border-left: 2px solid #ccc;padding-top:20px">
-                    <button type="button" class="btn btn-success" style="width: 100%" data-toggle="modal" data-target="#exampleModal">Checkout</button>
+                    <button type="button" class="btn btn-success" style="width: 100%" data-toggle="modal" data-target="#exampleModal" onclick="updateNetTotal()">Checkout</button>
                   <% 
                         float totalPrice = 0;
                         List<Pizza> pizzas = (List<Pizza>) request.getAttribute("pizzas");
@@ -143,8 +143,12 @@
                                         <li id="unitPrice">PRICE :<%= pizza.getPrice() %></li>
                                           </ul>
                                           <hr>
+                                           <div class="form-group">
+                
+                <input type="hidden" class="form-control" id="totalAmountInput" value="LKR.<%= pizza.getPrice() %>" readonly>
+            </div>
                                           <h4>TOTAL: <b id="totalAmount">LKR.<%= pizza.getPrice()%></b></h4>
-                                          <%= totalPrice = totalPrice + pizza.getPrice() %>
+                                          
                                              <div class="row">
                                         <div class="col-md-6">
                                         <form action="order" method="POST" class="me-2">
@@ -185,8 +189,16 @@
       </div>
       <div class="modal-body">
             <form action="order" method="post">
-            <input type="text" value="<%= session.getAttribute("userEmail") %>" name="emailOrder" id="emailOrder">    
-             <input type="text" value="<%= totalPrice %>">
+                <%
+                    String deliveryOption = request.getParameter("deliveryOption");
+                %>
+                <input type="hidden" class="form-control" id="deliveryOption" name="deliveryOption" value="${param.deliveryOption}">
+                 <div class="form-group">
+          <label for="nettotal">Net Total:</label>
+          <input type="text" class="form-control" id="nettotal" name="nettotal" readonly>
+        </div>
+            <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emailOrder" id="emailOrder">    
+             <input type="hidden" value="<%= totalPrice %>">
             <div class="form-group">
       <label for="date">Date:</label>
       <input type="date" class="form-control" id="date" name="date" required>
@@ -237,16 +249,35 @@
     </div>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
             <script>
+                function updateNetTotal() {
+    var totalAmountInputs = document.querySelectorAll('input[id="totalAmountInput"]'); // Get all the totalAmountInput fields
+    var netTotal = 0;
+
+    // Loop through each totalAmountInput field and add the amount to netTotal
+    totalAmountInputs.forEach(function(input) {
+        var amount = parseFloat(input.value.replace('LKR.', '').trim());
+        if (!isNaN(amount)) {
+            netTotal += amount;
+        }
+    });
+
+    // Update the nettotal field in the modal with the calculated total
+    var netTotalField = document.getElementById('nettotal');
+    netTotalField.value = "LKR." + netTotal.toFixed(2); 
+}
+
              function updateTotal(qtyInput) {
     // Get the quantity and unit price
     var qty = parseInt(qtyInput.value, 10);
-    var card = qtyInput.closest('.card'); // Find the nearest card containing the pizza
+    var card = qtyInput.closest('.card'); 
     var unitPrice = parseFloat(card.querySelector("#unitPrice").textContent.replace('PRICE :', '').trim());
     var totalAmountElement = card.querySelector("#totalAmount");
+    var totalAmountInput = card.querySelector("#totalAmountInput"); 
 
     // Calculate and update the total amount
     var totalAmount = qty * unitPrice;
     totalAmountElement.textContent = "LKR." + totalAmount.toFixed(2);
+    totalAmountInput.value = "LKR." + totalAmount.toFixed(2); 
 }
 
 function increaseQty(button) {

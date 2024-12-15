@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label for="exampleInputEmail1">Name</label>
                     <input type="text" class="form-control" id="txtname" name="txtname" aria-describedby="name" placeholder="Enter Name For Your Pizza">
-                    <input type="text" name="email" id="email" value="<%= session.getAttribute("userEmail") %>">
+                    <input type="hidden" name="email" id="email" value="<%= session.getAttribute("userEmail") %>">
                 </div>
                 <!-- Size Dropdown -->
                 <div class="form-group">

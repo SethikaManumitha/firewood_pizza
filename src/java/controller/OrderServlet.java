@@ -11,8 +11,13 @@ import javax.servlet.RequestDispatcher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import model.Builder.*;
 import dao.*;
+import java.util.HashMap;
 import model.stratergy.*;
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
@@ -130,69 +135,91 @@ public class OrderServlet extends HttpServlet {
     }
     
     private void ProcessPayment(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ClassNotFoundException {
             
-            String date = request.getParameter("date");
-            String address = request.getParameter("address");
-            String optionOrder = request.getParameter("deliveryOption");
-            String netTotal = request.getParameter("nettotal");
-            String email = request.getParameter("emailOrder");
-            List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
-            System.out.println(pizzas);
-            request.setAttribute("pizzas", pizzas);
-            
-            System.out.println(date);
-            System.out.println(address);
-            System.out.println(optionOrder);
-            System.out.println(netTotal);
-            System.out.println(email);
-            int loyaltyPoints = 0; 
-            String paymentMethod = request.getParameter("paymentMethod");
-            double amount = Double.parseDouble(request.getParameter("amount"));
-            
-            PaymentContext paymentContext = new PaymentContext();
-            
-            switch (paymentMethod) {
-            case "creditCard":
-                String cardNumber = request.getParameter("cardNumber");
-                paymentContext.setPaymentStrategy(new CreditCardPayment(cardNumber));
-                break;
+        String date = request.getParameter("date");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate = null;
 
-            case "digitalWallet":
-                String walletId = request.getParameter("walletId");
-                paymentContext.setPaymentStrategy(new DigitalWalletPayment(walletId));
-                break;
-
-            case "loyaltyProgram":
-                paymentContext.setPaymentStrategy(new LoyaltyProgramPayment(loyaltyPoints));
-                break;
-
-            default:
-                System.out.println("Invalid payment method selected.");
+        try {      
+            parsedDate = dateFormat.parse(date); 
+        } catch (ParseException e) {
+            e.printStackTrace(); 
         }
-        
+
+        String address = request.getParameter("address");
+        String optionOrder = request.getParameter("deliveryOption");
+        String netTotalStr = request.getParameter("nettotal").replace("LKR.", "");
+        Float totalAmount = Float.parseFloat(netTotalStr);
+        String email = request.getParameter("emailOrder");
+        List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
+
+        HashMap<String, String> pizzaMap = new HashMap<>();
+        for (Pizza pizza : pizzas) {
+            pizzaMap.put(pizza.getName(), email);
+        }
+
+        request.setAttribute("pizzas", pizzas);
+
+        int loyaltyPoints = orderDao.selectPoints(email); 
+        String paymentMethod = request.getParameter("paymentMethod");
+
+        PaymentContext paymentContext = new PaymentContext();
+
+        switch (paymentMethod) {
+        case "creditCard":
+            String cardNumber = request.getParameter("cardNumber");
+            paymentContext.setPaymentStrategy(new CreditCardPayment(cardNumber));
+            break;
+
+        case "digitalWallet":
+            String walletId = request.getParameter("walletId");
+            paymentContext.setPaymentStrategy(new DigitalWalletPayment(walletId));
+            break;
+
+        case "loyaltyProgram":
+            paymentContext.setPaymentStrategy(new LoyaltyProgramPayment(loyaltyPoints));
+            break;
+
+        default:
+            System.out.println("Invalid payment method selected.");
+        }
+
+        System.out.println(pizzas);
         try {
-            paymentContext.pay(amount);
+            paymentContext.pay(totalAmount);
+            double discount = paymentContext.getDiscount();
+            System.out.println(discount);
+            Order order = new Order.OrderBuilder(email, address, "Order Placed", pizzaMap)
+                .setDeliveryOption(optionOrder)
+                .setPaymentType(paymentMethod)
+                .setTotal(totalAmount)
+                .setDiscount(discount)
+                .setDate(parsedDate)
+                .build();
 
-            
+            orderDao.insertOrder(order, email);
             if ("loyaltyProgram".equals(paymentMethod)) {
-                loyaltyPoints += (int) (amount / 10); 
-                System.out.println(loyaltyPoints);
+                loyaltyPoints += (int) (totalAmount / 10); 
+                orderDao.updatePoints(loyaltyPoints, email);
             }
+            
+            
 
-            response.getWriter().write("Payment processed successfully!");
-            System.out.println("Payment processed successfully!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+            dispatcher.forward(request, response);
+
         } catch (IllegalStateException e) {
             response.getWriter().write("Payment failed: " + e.getMessage());
             System.out.println("Payment failed");
         }
-       
-    }
+}
+
     
      private void addToCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            System.out.println("test");
+            
             String name = request.getParameter("nameadd");
             String email = request.getParameter("emailadd");
             orderDao.updatePizza(name, email);

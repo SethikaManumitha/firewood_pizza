@@ -10,6 +10,7 @@ package dao;
  */
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,11 +22,15 @@ import model.Builder.*;
 import util.JDBCUtils;
 
 public class OrderDao {
-    
+    private final String INSERT_PIZZA_SQL = "INSERT INTO ordertbl (custemail, items, address, delivery_option, payment_type, total,discount, status,date) \n" +
+"VALUES (?, ?, ?, ?, ?, ?, ?,?,?);";
     private final String UPDATE_PIZZA_DEL_SQL = "UPDATE pizza SET pizzastatus = 2 WHERE pizzaname = ? AND custemail = ? ;";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
     private final String SELECT_PIZZA_FAV_SQL = "SELECT * FROM pizza WHERE is_favorite = 1 AND  custemail = ? ;";
     private final String UPDATE_PIZZA_FAV_SQL = "UPDATE pizza SET pizzastatus = 0 WHERE pizzaname = ? AND custemail = ? ;";
+    private final String UPDATE_PIZZA_ORDER_SQL = "UPDATE pizza SET pizzastatus = 1 WHERE pizzaname = ? AND custemail = ? ;";
+    private final String SELECT_POINTS_SQL = "SELECT * FROM customer WHERE email = ?";
+    private final String UPDATE_POINTS_SQL = "UPDATE customer SET point = ? WHERE email = ?";
     public List<Pizza>  selectAllPizza(String email) {
             
            List<Pizza> pizzaList = new ArrayList<>();
@@ -87,6 +92,41 @@ public class OrderDao {
         printSQLException(e);
     }
 }
+     public int  selectPoints(String email) {
+            
+           int points = 0;
+            try (Connection connection = JDBCUtils.getInstance().getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_POINTS_SQL)) {
+                 
+               preparedStatement.setString(1, email);
+               System.out.println(preparedStatement);
+            
+               ResultSet rs = preparedStatement.executeQuery();
+           
+               while(rs.next()){
+                    points = rs.getInt("point");
+               
+                }
+            } catch (SQLException e) {
+                printSQLException(e);
+            }
+            return points;
+        }
+     
+    public void updatePoints(int points, String email) throws ClassNotFoundException {
+    try (Connection connection = JDBCUtils.getInstance().getConnection();
+         PreparedStatement updateStatement = connection.prepareStatement(UPDATE_POINTS_SQL)) {
+        
+      
+        updateStatement.setInt(1, points);
+        updateStatement.setString(2, email);
+        updateStatement.executeUpdate();
+
+        System.out.println("Successfully updated pizza status.");
+    } catch (SQLException e) {
+        printSQLException(e);
+    }
+}
      
       public void updatePizzaDel(String name, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
@@ -102,7 +142,42 @@ public class OrderDao {
         printSQLException(e);
     }
 }
-    public List<Pizza>  selectFavPizza(String email) {
+    
+      public void insertOrder(Order order, String email) throws ClassNotFoundException {
+    try (Connection connection = JDBCUtils.getInstance().getConnection();
+         PreparedStatement insertStatement = connection.prepareStatement(INSERT_PIZZA_SQL);
+         PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PIZZA_ORDER_SQL)) {
+
+        
+        insertStatement.setString(1, email);
+        insertStatement.setString(2, order.getItems().toString());  
+        insertStatement.setString(3, order.getAddress());
+        insertStatement.setString(4, order.getDeliveryOption());
+        insertStatement.setString(5, order.getPaymentType());
+        insertStatement.setDouble(6, order.getTotal());
+        insertStatement.setDouble(7, order.getDiscount());
+        insertStatement.setString(8, order.getStatus());
+        insertStatement.setDate(9, new java.sql.Date(order.getDate().getTime()));
+        insertStatement.executeUpdate();
+
+        System.out.println("Successfully inserted the order.");
+
+        
+        for (String pizzaName : order.getItems().keySet()) {
+           
+            updateStatement.setString(1, pizzaName); 
+            updateStatement.setString(2, email);     
+            updateStatement.executeUpdate();        
+        }
+
+        System.out.println("Successfully updated pizza status for the order.");
+
+    } catch (SQLException e) {
+        printSQLException(e);
+    }
+}
+
+      public List<Pizza>  selectFavPizza(String email) {
             
            List<Pizza> pizzaList = new ArrayList<>();
            

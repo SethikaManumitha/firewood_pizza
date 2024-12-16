@@ -10,4 +10,5 @@ package model.stratergy;
  */
 public interface PaymentStrategy {
     void pay(double amount);
+    double getDiscount();
 }

@@ -10,14 +10,19 @@ package model.stratergy;
  */
 public class CreditCardPayment implements PaymentStrategy {
     private String cardNumber;
-
+    private double discount;
     public CreditCardPayment(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
     @Override
     public void pay(double amount) {
-        System.out.println("Paid " + amount + " using Credit Card. Card Number: " + cardNumber);
+        System.out.println("LKR." + amount + " has been charged from your Credit Card");
+    }
+    
+    @Override
+    public double getDiscount() {
+        return discount; 
     }
 }
 

@@ -231,13 +231,7 @@
             <input type="text" class="form-control" id="walletId" name="walletId" placeholder="Enter your wallet ID" />
         </div>
 
-        <div class="mb-3">
-            <label for="amount" class="form-label">Amount:</label>
-            <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount to pay" required />
-            <div class="invalid-feedback">
-                Please enter a valid amount.
-            </div>
-        </div>
+       
         <button type="submit" name="submit" class="btn btn-success" value="ProcessPayment" style="width:100%">Pay</button>
   
     </form>

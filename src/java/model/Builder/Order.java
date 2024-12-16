@@ -1,77 +1,102 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.Builder;
 
-/**
- *
- * @author MAS
- */
 import java.util.Date;
-import model.state.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
-    private final String pizza;
-    private final String customer;
-    private final Date date;
-    private final double totalPrice;
-    private final double discount;
-    private final String deliveryType;
-    private OrderState orderState; 
+    private String email;
+    private Map<String, String> items;  // Directly accepting the HashMap for items
+    private String address;
+    private String deliveryOption;
+    private String paymentType;
+    private double total;
+    private double discount;
+    private String status;
+    private Date date;
 
+    // Private constructor to enforce using Builder
     private Order(OrderBuilder builder) {
-        this.pizza = builder.pizza;
-        this.customer = builder.customer;
-        this.date = builder.date;
-        this.totalPrice = builder.totalPrice;
+        this.email = builder.email;
+        this.items = builder.items;
+        this.address = builder.address;
+        this.deliveryOption = builder.deliveryOption;
+        this.paymentType = builder.paymentType;
+        this.total = builder.total;
         this.discount = builder.discount;
-        this.deliveryType = builder.deliveryType;
-        this.orderState = builder.orderState; // Initial state
+        this.status = builder.status;
+        this.date = builder.date;
     }
 
-    public void setOrderState(OrderState newState) {
-        this.orderState = newState;
+    // Getters (optional but useful for later retrieval)
+    public String getEmail() {
+        return email;
     }
 
-    public void progressState() {
-        orderState.next(this);
+    public Map<String, String> getItems() {  // Returns the HashMap of items
+        return items;
     }
 
-    public String getOrderStatus() {
-        return orderState.getStatus();
+    public String getAddress() {
+        return address;
     }
 
-    // Getters for other fields
-    public String getPizza() { return pizza; }
-    public String getCustomer() { return customer; }
-    public Date getDate() { return date; }
-    public double getTotalPrice() { return totalPrice; }
-    public double getDiscount() { return discount; }
-    public String getDeliveryType() { return deliveryType; }
+    public String getDeliveryOption() {
+        return deliveryOption;
+    }
 
-    // Builder class
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+  
     public static class OrderBuilder {
-        private String pizza;
-        private String customer;
-        private Date date;
-        private double totalPrice;
-        private double discount;
-        private String deliveryType;
-        private OrderState orderState; // State Pattern integration
+        private String email;
+        private Map<String, String> items;  // Now accepts the HashMap directly
+        private String address;
+        private String deliveryOption;
+        private String paymentType;
+        private double total;
+        private double discount = 0; 
+        private String status;
+        private Date date = new Date();
 
-        public OrderBuilder(String pizza, String customer) {
-            this.pizza = pizza;
-            this.customer = customer;
+        // Constructor that accepts HashMap directly for items
+        public OrderBuilder(String email, String address, String status, Map<String, String> items) {
+            this.email = email;
+            this.address = address;
+            this.status = status;
+            this.items = items;  // Assign the passed-in HashMap directly
         }
 
-        public OrderBuilder setDate(Date date) {
-            this.date = date;
+        public OrderBuilder setDeliveryOption(String deliveryOption) {
+            this.deliveryOption = deliveryOption;
             return this;
         }
 
-        public OrderBuilder setTotalPrice(double totalPrice) {
-            this.totalPrice = totalPrice;
+        public OrderBuilder setPaymentType(String paymentType) {
+            this.paymentType = paymentType;
+            return this;
+        }
+
+        public OrderBuilder setTotal(double total) {
+            this.total = total;
             return this;
         }
 
@@ -80,13 +105,8 @@ public class Order {
             return this;
         }
 
-        public OrderBuilder setDeliveryType(String deliveryType) {
-            this.deliveryType = deliveryType;
-            return this;
-        }
-
-        public OrderBuilder setOrderState(OrderState state) {
-            this.orderState = state;
+        public OrderBuilder setDate(Date date) {
+            this.date = date;
             return this;
         }
 
@@ -95,4 +115,3 @@ public class Order {
         }
     }
 }
-

@@ -19,6 +19,14 @@ public class PaymentContext {
         if (paymentStrategy == null) {
             throw new IllegalStateException("Payment strategy not set!");
         }
+       
         paymentStrategy.pay(amount);
+    }
+    
+    public double getDiscount() {
+        if (paymentStrategy == null) {
+            throw new IllegalStateException("Payment strategy not set!");
+        }
+        return paymentStrategy.getDiscount();
     }
 }

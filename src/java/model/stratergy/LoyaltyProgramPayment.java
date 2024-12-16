@@ -9,7 +9,8 @@ package model.stratergy;
  * @author MAS
  */
 public class LoyaltyProgramPayment implements PaymentStrategy {
-    private int loyaltyPoints;
+    private int loyaltyPoints;  
+    private double discount;   
 
     public LoyaltyProgramPayment(int loyaltyPoints) {
         this.loyaltyPoints = loyaltyPoints;
@@ -17,19 +18,45 @@ public class LoyaltyProgramPayment implements PaymentStrategy {
 
     @Override
     public void pay(double amount) {
-        double discount = calculateDiscount(amount);
+       
+        discount = calculateDiscount(amount); 
         double finalAmount = amount - discount;
+
         System.out.println("Paid " + finalAmount + " using Loyalty Program. Discount applied: " + discount);
-        accumulatePoints(finalAmount);
+        System.out.println("Points Earned: " + accumulatePoints(amount));
+    }
+
+    @Override
+    public double getDiscount() {
+        return discount; 
     }
 
     private double calculateDiscount(double amount) {
-        return amount * 0.05;
+       
+        double discountRate;
+        if (loyaltyPoints >= 500) {
+            discountRate = 0.10; 
+        } else if (loyaltyPoints >= 100) {
+            discountRate = 0.05;
+        } else {
+            discountRate = 0.01; 
+        }
+
+        discount = amount * discountRate;
+        double maxDiscount = amount * 0.5; 
+        if (discount > maxDiscount) {
+            discount = maxDiscount;
+        }
+
+        return discount; 
     }
 
-    private void accumulatePoints(double amount) {
-        loyaltyPoints += (int) (amount / 10);
-        System.out.println("Loyalty Points accumulated: " + loyaltyPoints);
+    private int accumulatePoints(double amount) {
+       
+        loyaltyPoints += (int) (amount / 100);  
+        return loyaltyPoints;  
     }
 }
+
+
 

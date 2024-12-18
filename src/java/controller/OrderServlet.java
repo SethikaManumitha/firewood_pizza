@@ -18,6 +18,7 @@ import java.util.Date;
 import model.Builder.*;
 import dao.*;
 import java.util.HashMap;
+import model.state.*;
 import model.stratergy.*;
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
@@ -136,7 +137,7 @@ public class OrderServlet extends HttpServlet {
     
     private void ProcessPayment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
-            
+     
         String date = request.getParameter("date");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date parsedDate = null;
@@ -190,7 +191,7 @@ public class OrderServlet extends HttpServlet {
             paymentContext.pay(totalAmount);
             double discount = paymentContext.getDiscount();
             System.out.println(discount);
-            Order order = new Order.OrderBuilder(email, address, "Order Placed", pizzaMap)
+            Order order = new Order.OrderBuilder(0,email, address, "Placed", pizzaMap)
                 .setDeliveryOption(optionOrder)
                 .setPaymentType(paymentMethod)
                 .setTotal(totalAmount)
@@ -206,7 +207,7 @@ public class OrderServlet extends HttpServlet {
             
             
 
-            RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("feedback.jsp");
             dispatcher.forward(request, response);
 
         } catch (IllegalStateException e) {

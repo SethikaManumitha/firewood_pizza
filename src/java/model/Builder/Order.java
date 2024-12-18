@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Order {
+    private int id;  // Add the id field
     private String email;
     private Map<String, String> items;  // Directly accepting the HashMap for items
     private String address;
@@ -17,6 +18,7 @@ public class Order {
 
     // Private constructor to enforce using Builder
     private Order(OrderBuilder builder) {
+        this.id = builder.id;  // Set the id from the builder
         this.email = builder.email;
         this.items = builder.items;
         this.address = builder.address;
@@ -28,12 +30,21 @@ public class Order {
         this.date = builder.date;
     }
 
-    // Getters (optional but useful for later retrieval)
+    // Getter and setter for id
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    // Getters (existing)
     public String getEmail() {
         return email;
     }
 
-    public Map<String, String> getItems() {  // Returns the HashMap of items
+    public Map<String, String> getItems() {
         return items;
     }
 
@@ -65,24 +76,25 @@ public class Order {
         return date;
     }
 
-  
     public static class OrderBuilder {
+        private int id;  // Add id in the builder
         private String email;
         private Map<String, String> items;  // Now accepts the HashMap directly
         private String address;
         private String deliveryOption;
         private String paymentType;
         private double total;
-        private double discount = 0; 
+        private double discount = 0;
         private String status;
         private Date date = new Date();
 
         // Constructor that accepts HashMap directly for items
-        public OrderBuilder(String email, String address, String status, Map<String, String> items) {
+        public OrderBuilder(int id, String email, String address, String status, Map<String, String> items) {
+            this.id = id;  // Set id in builder
             this.email = email;
             this.address = address;
             this.status = status;
-            this.items = items;  // Assign the passed-in HashMap directly
+            this.items = items;
         }
 
         public OrderBuilder setDeliveryOption(String deliveryOption) {

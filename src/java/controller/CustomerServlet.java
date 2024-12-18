@@ -68,6 +68,7 @@ public class CustomerServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    // Insert a customer 
     private void insertCustomer(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ClassNotFoundException {
 
@@ -83,24 +84,28 @@ public class CustomerServlet extends HttpServlet {
         customerDao.addCustomer(customer);
         response.sendRedirect("signup.jsp");
     }
-
+    
+    // Check for user in the DB
     private void checkCustomer(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException, ClassNotFoundException {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        boolean userExists = customerDao.selectCustomer(email, password);
+        boolean userExists = customerDao.checkCustomer(email, password);
         HttpSession session = request.getSession();
         if (userExists) {
+            Customer customer = customerDao.selectCustomer(email, password);
+            int points = customer.getPoints();
             session.setAttribute("status", "logged");
             session.setAttribute("userEmail", email);
+            session.setAttribute("points", points);
 
             if ("admin@123".equals(email)) {
-                // Redirect to AdminServlet to load orders and forward to admin.jsp
+                // If the user is admin redirect to admin dashboard
                 response.sendRedirect(request.getContextPath() + "/admin");
             } else {
-                // For other users
+                // Redirect customer interface
                 RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
                 dispatcher.forward(request, response);
             }

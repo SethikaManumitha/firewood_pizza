@@ -35,7 +35,7 @@ public class BuilderServlet extends HttpServlet {
         toppingDao = new ToppingDao();
         customPizzaDao = new CustomPizzaDao();
 
-        // Chain the handlers
+        // Chain of handlers
         sizeHandler.setNextHandler(crustHandler);
         crustHandler.setNextHandler(sauceHandler);
         sauceHandler.setNextHandler(toppingHandler);
@@ -95,6 +95,7 @@ public class BuilderServlet extends HttpServlet {
         }
     }
 
+    // Function to build pizza
     private void buildPizza(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -108,6 +109,7 @@ public class BuilderServlet extends HttpServlet {
             boolean isFavourite = request.getParameter("isFavourite") != null;
             float price = Float.parseFloat(request.getParameter("totalAmountField")); 
             int qty = 1; 
+            
             // Build the pizza object
             Pizza pizza = new Pizza.Builder()
                     .setName(name)
@@ -121,10 +123,7 @@ public class BuilderServlet extends HttpServlet {
                     .setQty(qty)
                     .build();
 
-            
             sizeHandler.handle(pizza);
-
-            
             customPizzaDao.insertPizza(pizza, email);
 
             

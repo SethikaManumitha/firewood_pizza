@@ -73,6 +73,26 @@
         button:hover {
             background-color: #45a049;
         }
+        
+                .points-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        color: #d0021b;
+        border: 2px solid #d0021b;
+        border-radius: 50px; /* Creates a circular rectangle */
+        padding: 5px 15px;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .points-badge i {
+        margin-right: 5px; /* Add space between star icon and points */
+    }
+    .navbar .dropdown {
+    margin-right: 100px; /* Adjusts the position of the user icon */
+}
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -81,11 +101,11 @@
     
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-danger justify-content-between">
-    <a class="navbar-brand text-white">Firewood Pizza</a>
-    <form class="form-inline">
-        <%
-            String status = (String) session.getAttribute("status");
+    <nav class="navbar navbar-dark bg-danger">
+    <a class="navbar-brand text-white" href="#">Firewood Pizza</a>
+    <form class="form-inline ml-auto">
+        <% 
+            String status = (String) session.getAttribute("status"); 
             if (status == null || !status.equals("logged")) {
         %>
             <a href="login.jsp">
@@ -94,15 +114,27 @@
             <a href="signup.jsp">
                 <button class="btn btn-outline-light my-2 my-sm-0" type="button">Sign-Up</button>
             </a>
-        <%
-            } else {
+        <% 
+            } else { 
+                int points = (session.getAttribute("points") != null) ? (int) session.getAttribute("points") : 0;
         %>
-            <span class="text-white mr-3">Welcome, <%= session.getAttribute("userEmail") %>!</span>
-            <a href="login.jsp">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="button">Logout</button>
-            </a>
-        <%
-            }
+            <span class="points-badge mr-3">
+                <i class="fas fa-star" style="color: gold;"></i> <strong><%= points %></strong>
+            </span>
+            <div class="dropdown show">
+                <a class="btn btn-danger dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-user"></i>
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="#"><i class="fas fa-user"></i> User Profile</a>
+                  <hr>
+                 <a class="dropdown-item" href="order?email=<%= session.getAttribute("userEmail") %>"><i class="fas fa-star"></i> Favourite List</a>
+                  <a class="dropdown-item" href="login.jsp"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+              </div>
+        <% 
+            } 
         %>
     </form>
 </nav>

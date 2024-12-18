@@ -8,21 +8,16 @@ package model.state;
  *
  * @author MAS
  */
-public class PlacedState implements OrderState {
-    @Override
-    public void next(OrderContext ctx) {
-        ctx.setState(new InPreparationState());
-        System.out.println("Order is now in preparation.");
+public class PlacedState implements OrderState{
+    
+     @Override
+     public void processOrder(OrderContext context) {
+        context.setState(new InPreparationState());
+        System.out.println("Order is now Processing.");
     }
 
     @Override
-    public void previous(OrderContext ctx) {
-        System.out.println("Order is already in its initial state.");
-    }
-
-    @Override
-    public String getState() {
+    public String getStatus() {
         return "Placed";
     }
 }
-

@@ -9,30 +9,29 @@ package model.state;
  * @author MAS
  */
 public class OrderContext {
-    private OrderState currentState;
-
-    public OrderContext() {
-        currentState = new PlacedState(); // Default state
+    
+   private OrderState state;
+   
+   public OrderContext() {
+       
+        this.state = new PlacedState();
     }
 
     public void setState(OrderState state) {
-        this.currentState = state;
+        this.state = state;
     }
 
-    public void nextState() {
-        currentState.next(this);
+    public OrderState getState() {
+        return state;
     }
 
-    public void previousState() {
-        currentState.previous(this);
+    public void processOrder() {
+        state.processOrder(this);
     }
 
-    public String getCurrentState() {
-        return currentState.getState();
+    public String getStatus() {
+        return state.getStatus();
     }
     
-    public void resetState() {
-        this.currentState = new PlacedState(); 
-    }
 }
 

@@ -155,6 +155,7 @@
                                 <th scope="col">Address</th>
                                 <th scope="col">Order</th>
                                 <th scope="col">Total</th>
+                                <th scope="col">Status</th>
                                 
                             </tr>
                         </thead>
@@ -181,6 +182,7 @@
                                     </ul>
                                 </td>
                                 <td>LKR.<%= order.getTotal() - order.getDiscount() %></td>
+                                <td><%= order.getStatus() %></td>
                                
                             </tr>
                             <%

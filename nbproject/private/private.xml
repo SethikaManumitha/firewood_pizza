@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/Outadmin.jsp</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/OrderState.java</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/OrderContext.java</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/PlacedState.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/controller/OrderServlet.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/placedadmin.jsp</file>
             <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/dao/AdminDao.java</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/admin.jsp</file>
             <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/OutForDeliveryState.java</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/controller/CustomerServlet.java</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/Prepadmin.jsp</file>
             <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/InPreparationState.java</file>
             <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/controller/AdminServlet.java</file>
         </group>

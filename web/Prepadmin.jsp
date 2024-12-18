@@ -156,6 +156,7 @@
                                 <th scope="col">Order</th>
                                 <th scope="col">Total</th>
                                 <th scope="col">Status</th>
+                                <th scope="col">&nbsp;</th>
                                
                             </tr>
                         </thead>
@@ -182,10 +183,12 @@
                                     </ul>
                                 </td>
                                 <td>LKR.<%= order.getTotal() - order.getDiscount() %></td>
+                                <td><%= order.getStatus() %></td>
                                 <td>
                                     <form action="admin" method="POST">
+                                    <input type="hidden" name="currentState" value="<%= order.getStatus()%>">
                                     <input type="hidden" name="txtid" value="<%= order.getId() %>">
-                                    <button type="submit"  name="submit" value="PreparedState" class="btn btn-success"><%= order.getStatus() %></button>
+                                    <button type="submit"  name="submit" value="ChangeState" class="btn btn-success">NEXT STATE</button>
                                     </form>
                                 </td>
                             </tr>

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Builder.Order;
 import dao.AdminDao;
-import model.state.OrderContext;  // Importing the correct OrderContext
+import model.state.*;  
 
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet {
@@ -29,25 +29,14 @@ public class AdminServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String formAction = request.getParameter("submit");
-
-        // Retrieve the OrderContext from the session, or create it if not present
+        String state = request.getParameter("currentState"); // Optional: Set the initial state to "Placed"
         OrderContext orderContext = new OrderContext();
-        if (orderContext == null) {
-            orderContext = new OrderContext();
-            request.getSession().setAttribute("orderContext", orderContext);
-        }
-        try {
-            if ("PreparedState".equals(formAction)) {
-                changeState(request, response, orderContext); 
-            } else if ("PlacedState".equals(formAction)) {
-                placedState(request, response, orderContext); 
-            }  else if ("PrepState".equals(formAction)) {
-                prepState(request, response, orderContext); 
-            }  else if ("OutState".equals(formAction)) {
-                outState(request, response, orderContext); 
-            }else {
-                showBuilderForm(request, response, orderContext); 
+
+        try {    
+            if ("ChangeState".equals(formAction)) {
+                changeState(request, response, orderContext);
             }
+            selectState(request, response, orderContext, state);
         } catch (Exception ex) {
             Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in doGet", ex);
             request.setAttribute("errorMessage", "Unable to load admin data: " + ex.getMessage());
@@ -55,135 +44,99 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-   private void showBuilderForm(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext)
-        throws ServletException, IOException {
-    try {
-        System.out.println("Current State: " + orderContext.getCurrentState());
-        List<Order> orders = adminDao.selectAllOrders(orderContext.getCurrentState());
+    private void selectState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext, String state)
+            throws ServletException, IOException {
+
+        // Load the orders for each state
+        orderContext.setState(new PlacedState());
+        List<Order> placedList = adminDao.selectAllOrders(orderContext.getStatus());
+
+        orderContext.setState(new InPreparationState());
+        List<Order> inPreparationList = adminDao.selectAllOrders(orderContext.getStatus());
+
+        orderContext.setState(new OutForDeliveryState());
+        List<Order> outForOrderList = adminDao.selectAllOrders(orderContext.getStatus());
+
+        System.out.println("Placed:" + placedList);
+        System.out.println("InPrep:" +inPreparationList);
+        System.out.println("Out For Order:" +outForOrderList);
         
-        int placeStateCount = adminDao.selectOrderCount("Placed");
-        int inPlaceStateCount = adminDao.selectOrderCount("In_Preparation");
-        int outForOrderStateCount = adminDao.selectOrderCount("Out_for_Delivery");
-        
-        request.setAttribute("orders", orders);
-        request.setAttribute("totalOrders", orders.size());
-
-        // Set the order counts as request attributes
-        request.setAttribute("placeStateCount", placeStateCount);
-        request.setAttribute("inPlaceStateCount", inPlaceStateCount);
-        request.setAttribute("outForOrderStateCount", outForOrderStateCount);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
-        dispatcher.forward(request, response);
-    } catch (Exception ex) {
-        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in showBuilderForm", ex);
-        request.setAttribute("errorMessage", "Unable to load orders: " + ex.getMessage());
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    }
-}
-
-private void changeState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext)
-        throws ServletException, IOException {
-    try {
-        // Get order counts from database
-        int placeStateCount = adminDao.selectOrderCount("Placed");
-        int inPlaceStateCount = adminDao.selectOrderCount("In_Preparation");
-        int outForOrderStateCount = adminDao.selectOrderCount("Out_for_Delivery");
-
-        // Parse the delivery option ID
-        String deliveryOption = request.getParameter("txtid");
-        if (deliveryOption == null || deliveryOption.isEmpty()) {
-            Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Delivery option ID is missing");
-            request.setAttribute("errorMessage", "Delivery option ID is required.");
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+        if (state == null || state.isEmpty()) {
+            state = "Placed";
         }
 
-        int deliveryOptionId;
+        System.out.println(state);
+        switch (state) {
+            case "InPreparation":
+                request.setAttribute("orders", inPreparationList);
+                RequestDispatcher prepDispatcher = request.getRequestDispatcher("Prepadmin.jsp");
+                prepDispatcher.forward(request, response);
+                break;
+
+            case "OutForDelivery":
+                request.setAttribute("orders", outForOrderList);
+                RequestDispatcher outDispatcher = request.getRequestDispatcher("Outadmin.jsp");
+                outDispatcher.forward(request, response);
+                break;
+
+            default:
+                request.setAttribute("orders", placedList);
+                RequestDispatcher placedDispatcher = request.getRequestDispatcher("placedadmin.jsp");
+                placedDispatcher.forward(request, response);
+                
+                break;
+        }
+        System.out.println(state);
+    }
+
+    private void changeState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext)
+            throws ServletException, IOException {
         try {
-            deliveryOptionId = Integer.parseInt(deliveryOption);
-        } catch (NumberFormatException e) {
-            Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Invalid delivery option ID: " + deliveryOption, e);
-            request.setAttribute("errorMessage", "Invalid ID: Please provide a valid number.");
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+            String currentState = request.getParameter("currentState");
+            String deliveryOption = request.getParameter("txtid");
+
+            if (deliveryOption == null || deliveryOption.isEmpty()) {
+                Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Delivery option ID is missing");
+                request.setAttribute("errorMessage", "Delivery option ID is required.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
+            int orderId;
+            try {
+                orderId = Integer.parseInt(deliveryOption);
+            } catch (NumberFormatException e) {
+                Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Invalid delivery option ID: " + deliveryOption, e);
+                request.setAttribute("errorMessage", "Invalid ID: Please provide a valid number.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
+            
+            switch (currentState) {
+                case "Placed":
+                    orderContext.setState(new PlacedState());
+                    break;
+                case "InPreparation":
+                    orderContext.setState(new InPreparationState());
+                    break;
+                case "OutForDelivery":
+                    orderContext.setState(new OutForDeliveryState());
+                    break;
+                default:
+                    throw new ServletException("Invalid state: " + currentState);
+            }
+
+            
+            orderContext.processOrder();
+            adminDao.updatePizza(orderId, orderContext.getStatus());
+
+            selectState(request, response, orderContext, orderContext.getStatus());
+
+        } catch (Exception ex) {
+            Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in changeState", ex);
+            request.setAttribute("errorMessage", "Unable to process order state change: " + ex.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
-        // Debug: Log current state
-        System.out.println("Current State: " + orderContext.getCurrentState());
-
-        // Transition to the next state
-        orderContext.nextState();
-
-        // Debug: Log state after transition
-        System.out.println("State after transition: " + orderContext.getCurrentState());
-
-        // Update pizza order state in the database
-        adminDao.updatePizza(deliveryOptionId, orderContext.getCurrentState());
-
-        // Retrieve updated list of orders
-        List<Order> orders = adminDao.selectAllOrders(orderContext.getCurrentState());
-        System.out.println(orders);
-
-        // Set attributes for JSP
-        request.setAttribute("orders", orders);
-        request.setAttribute("totalOrders", orders.size());
-        request.setAttribute("placeStateCount", placeStateCount);
-        request.setAttribute("inPlaceStateCount", inPlaceStateCount);
-        request.setAttribute("outForOrderStateCount", outForOrderStateCount);
-
-        // Forward to JSP
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
-        dispatcher.forward(request, response);
-    } catch (Exception ex) {
-        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in preparedState", ex);
-        request.setAttribute("errorMessage", "Unable to load orders: " + ex.getMessage());
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
-}
-
-
-private void placedState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext)
-        throws ServletException, IOException {
-    try {
-        List<Order> orders = adminDao.selectAllOrders("Placed");
-        request.setAttribute("orders", orders);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("placedadmin.jsp");
-        dispatcher.forward(request, response);
-    } catch (Exception ex) {
-        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in preparedState", ex);
-        request.setAttribute("errorMessage", "Unable to load orders: " + ex.getMessage());
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    }
-}
-
-private void prepState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext)
-        throws ServletException, IOException {
-    try {
-        List<Order> orders = adminDao.selectAllOrders("InPreparation");
-        request.setAttribute("orders", orders);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("Prepadmin.jsp");
-        dispatcher.forward(request, response);
-    } catch (Exception ex) {
-        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in preparedState", ex);
-        request.setAttribute("errorMessage", "Unable to load orders: " + ex.getMessage());
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    }
-}
-
-private void outState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext)
-        throws ServletException, IOException {
-    try {
-        List<Order> orders = adminDao.selectAllOrders("Out for Delivery");
-        request.setAttribute("orders", orders);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("Outadmin.jsp");
-        dispatcher.forward(request, response);
-    } catch (Exception ex) {
-        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in preparedState", ex);
-        request.setAttribute("errorMessage", "Unable to load orders: " + ex.getMessage());
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    }
-}
-
-
 }

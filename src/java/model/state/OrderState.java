@@ -9,7 +9,7 @@ package model.state;
  * @author MAS
  */
 public interface OrderState {
-    void next(OrderContext ctx);
-    void previous(OrderContext ctx);
-    String getState();
+    void processOrder(OrderContext context);
+    String getStatus();
 }
+

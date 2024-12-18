@@ -9,20 +9,15 @@ package model.state;
  * @author MAS
  */
 public class OutForDeliveryState implements OrderState {
-    @Override
-    public void next(OrderContext ctx) {
-        System.out.println("Order has been delivered (final state).");
+   @Override
+    public void processOrder(OrderContext context) {
+        System.out.println("Order is now Delivered.");
     }
 
     @Override
-    public void previous(OrderContext ctx) {
-        ctx.setState(new InPreparationState());
-        System.out.println("Order has been returned to preparation state.");
+    public String getStatus() {
+        return "OutForDelivery";
     }
-
-    @Override
-    public String getState() {
-        return "Out for Delivery";
-    }
+ 
 }
 

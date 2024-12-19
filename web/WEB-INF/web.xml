@@ -8,6 +8,14 @@
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>controller.AdminServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Notification</servlet-name>
+        <servlet-class>model.Notification</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NotificationServlet</servlet-name>
+        <servlet-class>controller.NotificationServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BuilderServlet</servlet-name>
         <url-pattern>/BuilderServlet</url-pattern>
@@ -15,6 +23,14 @@
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/AdminServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Notification</servlet-name>
+        <url-pattern>/Notification</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationServlet</servlet-name>
+        <url-pattern>/NotificationServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -9,6 +9,7 @@ import java.util.*;
 public class AdminDao {
 
     private final String SELECT_ORDER_SQL = "SELECT * FROM ordertbl WHERE status = ?";
+    private final String INSERT_NOTIFICATION_SQL = "INSERT INTO notification (email, notification) VALUES (?, ?)";
     private final String SELECT_CUSTOMER_SQL = "SELECT * FROM customer WHERE email = ?";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM pizza WHERE custemail = ? AND pizzaname = ?";
     private final String UPDATE_STATE_SQL = "UPDATE ordertbl SET status = ? WHERE id = ?";
@@ -70,7 +71,7 @@ public class AdminDao {
                 }
 
                 // Create Order object
-                Order order = new Order.OrderBuilder(id, customerName, address, state, pizzaItems)
+                Order order = new Order.OrderBuilder(id, customerName,email, address, state, pizzaItems)
                         .setDeliveryOption(deliveryOption)
                         .setTotal(total)
                         .setDiscount(discount)
@@ -78,7 +79,7 @@ public class AdminDao {
                         .build();
 
                 orderList.add(order);
-                System.out.println(orderStmt);
+                
             }
         } catch (SQLException e) {
             printSQLException(e);
@@ -112,11 +113,25 @@ public class AdminDao {
             updateStatement.setInt(2, id);
             updateStatement.executeUpdate();
 
-            System.out.println("Successfully updated pizza status.");
+           
         } catch (SQLException e) {
             printSQLException(e);
         }
     }
+    
+    public void insertNotification(String email, String notification) throws ClassNotFoundException {
+    try (Connection connection = JDBCUtils.getInstance().getConnection();
+         PreparedStatement insertStatement = connection.prepareStatement(INSERT_NOTIFICATION_SQL)) {
+
+        insertStatement.setString(1, email);
+        insertStatement.setString(2, notification);
+        insertStatement.executeUpdate();
+
+    } catch (SQLException e) {
+        printSQLException(e);
+    }
+}
+
 
     private void printSQLException(SQLException ex) {
         for (Throwable e : ex) {

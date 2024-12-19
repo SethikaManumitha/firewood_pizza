@@ -191,7 +191,7 @@ public class OrderServlet extends HttpServlet {
             paymentContext.pay(totalAmount);
             double discount = paymentContext.getDiscount();
             System.out.println(discount);
-            Order order = new Order.OrderBuilder(0,email, address, "Placed", pizzaMap)
+            Order order = new Order.OrderBuilder(0,"",email, address, "Placed", pizzaMap)
                 .setDeliveryOption(optionOrder)
                 .setPaymentType(paymentMethod)
                 .setTotal(totalAmount)

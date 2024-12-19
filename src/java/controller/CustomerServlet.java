@@ -97,9 +97,21 @@ public class CustomerServlet extends HttpServlet {
         if (userExists) {
             Customer customer = customerDao.selectCustomer(email, password);
             int points = customer.getPoints();
+            String name = customer.getName();
+            String phone = customer.getPhone();
+            String address = customer.getAddress();
+            Date dob = customer.getDob();
             session.setAttribute("status", "logged");
             session.setAttribute("userEmail", email);
             session.setAttribute("points", points);
+            
+            session.setAttribute("name", name);
+            session.setAttribute("phone", phone);
+            session.setAttribute("address", address);
+            session.setAttribute("pass", password);
+            session.setAttribute("dob", dob);
+            
+            
 
             if ("admin@123".equals(email)) {
                 // If the user is admin redirect to admin dashboard

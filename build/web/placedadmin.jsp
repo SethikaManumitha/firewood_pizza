@@ -93,15 +93,7 @@
                     <li>
                         <a href="admin"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a>
                     </li>
-                    <li>
-                        <a href="admin?submit=PreparedStateAll"><i class="fas fa-receipt mr-2"></i>Placed Orders</a>
-                    </li>
-                    <li>
-                        <a href="admin?submit=PrepStateAll"><i class="fas fa-box-open mr-2"></i>Orders In Preperation</a>
-                    </li>
-                    <li>
-                        <a href="admin?submit=OutStateAll"><i class="fas fa-user-friends mr-2"></i>Orders Out For Delivery</a>
-                    </li>
+                    
                    
                     <li>
                         <a href="login.jsp">
@@ -167,7 +159,7 @@
                                         Order order = orders.get(i);
                             %>
                             <tr>
-                                <td><%= order.getEmail() %></td>
+                                <td><%= order.getName()%></td>
                                 <td><%= order.getAddress() %></td>
                                 <td>
                                     <ul>
@@ -185,6 +177,9 @@
                                 <td><%= order.getStatus() %></td>
                                 <td>
                                     <form action="admin" method="POST">
+                                        <input type="hidden" name="name" value="<%= order.getName()%>">
+                                        <input type="hidden" name="email" value="<%= order.getEmail() %>">
+                                  
                                         <input type="hidden" name="currentState" value="<%= order.getStatus()%>">
                                     <input type="hidden" name="txtid" value="<%= order.getId() %>">
                                     <button type="submit"  name="submit" value="ChangeState" class="btn btn-success">NEXT STATE</button>

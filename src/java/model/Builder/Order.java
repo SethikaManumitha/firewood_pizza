@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class Order {
     private int id;  // Add the id field
+    private String name; // Add the name field
     private String email;
     private Map<String, String> items;  // Directly accepting the HashMap for items
     private String address;
@@ -19,6 +20,7 @@ public class Order {
     // Private constructor to enforce using Builder
     private Order(OrderBuilder builder) {
         this.id = builder.id;  // Set the id from the builder
+        this.name = builder.name; // Set the name from the builder
         this.email = builder.email;
         this.items = builder.items;
         this.address = builder.address;
@@ -37,6 +39,15 @@ public class Order {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    // Getter and setter for name
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     // Getters (existing)
@@ -77,20 +88,22 @@ public class Order {
     }
 
     public static class OrderBuilder {
-        private int id;  // Add id in the builder
+        private int id;  
+        private String name; // Add the name field to the builder
         private String email;
-        private Map<String, String> items;  // Now accepts the HashMap directly
+        private Map<String, String> items;  
         private String address;
         private String deliveryOption;
         private String paymentType;
         private double total;
-        private double discount = 0;
+        private double discount = 0; 
         private String status;
         private Date date = new Date();
 
         // Constructor that accepts HashMap directly for items
-        public OrderBuilder(int id, String email, String address, String status, Map<String, String> items) {
-            this.id = id;  // Set id in builder
+        public OrderBuilder(int id, String name, String email, String address, String status, Map<String, String> items) {
+            this.id = id;  
+            this.name = name;
             this.email = email;
             this.address = address;
             this.status = status;

@@ -3,10 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/Outadmin.jsp</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/placedadmin.jsp</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/OrderContext.java</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/Prepadmin.jsp</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/OrderState.java</file>
             <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/controller/AdminServlet.java</file>
         </group>
     </open-files>

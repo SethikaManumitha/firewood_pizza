@@ -252,6 +252,14 @@
     <label for="address">Address:</label>
     <input type="text" class="form-control" id="address" name="address" value="<%= session.getAttribute("address") %>">
   </div>
+  
+  <div class="form-group">
+      <label>Include Custom Packaging <span style="color:#ccc">(Additional LKR.50.0)</span></label>
+    <select class="form-control" id="includePack" name="includePack">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
+  </div>
               <hr>
             <div class="mb-3">
             <label for="paymentMethod" class="form-label">Payment Method:</label>
@@ -267,9 +275,16 @@
         </div>
        
         <div id="creditCardDetails" class="mb-3" style="display:none;">
-            <label for="cardNumber" class="form-label">Card Number:</label>
-            <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Enter your card number" />
+        
+        <label for="cardNumber" class="form-label">Card:</label>
+            <select class="form-control" id="cardNumber" name="cardNumber" required>
+                <option value="" selected disabled>Select a Card</option>
+                  <option value="visa">Visa</option>
+      <option value="mastercard">MasterCard</option>
+      <option value="amex">American Express</option>
+            </select>
         </div>
+              
 
         <div id="digitalWalletDetails" class="mb-3" style="display:none;">
             <label for="walletId" class="form-label">Wallet ID:</label>

@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/java/controller/CustomerServlet.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>21</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/state/OrderState.java</file>
-            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/controller/AdminServlet.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/command/ProvideFeedbackCommand.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/command/PlaceCommand.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/command/AddToppingCommand.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/decorator/CustomPackage.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/src/java/model/stratergy/LoyaltyProgramPayment.java</file>
+            <file>file:/C:/Users/MAS/Documents/NetBeansProjects/pizza_project/web/order.jsp</file>
         </group>
     </open-files>
 </project-private>

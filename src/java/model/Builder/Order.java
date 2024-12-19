@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Order {
-    private int id;  // Add the id field
-    private String name; // Add the name field
+    private int id;  
+    private String name; 
     private String email;
-    private Map<String, String> items;  // Directly accepting the HashMap for items
+    private Map<String, String> items; 
     private String address;
     private String deliveryOption;
     private String paymentType;
@@ -18,7 +18,7 @@ public class Order {
     private Date date;
 
     // Private constructor to enforce using Builder
-    private Order(OrderBuilder builder) {
+    public Order(OrderBuilder builder) {
         this.id = builder.id;  // Set the id from the builder
         this.name = builder.name; // Set the name from the builder
         this.email = builder.email;

@@ -18,7 +18,7 @@ import java.util.Date;
 import model.Builder.*;
 import dao.*;
 import java.util.HashMap;
-import model.state.*;
+import model.decorator.*;
 import model.stratergy.*;
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
@@ -149,6 +149,7 @@ public class OrderServlet extends HttpServlet {
         }
 
         String address = request.getParameter("address");
+        String includePack = request.getParameter("includePack");
         String optionOrder = request.getParameter("deliveryOption");
         String netTotalStr = request.getParameter("nettotal").replace("LKR.", "");
         Float totalAmount = Float.parseFloat(netTotalStr);
@@ -198,8 +199,18 @@ public class OrderServlet extends HttpServlet {
                 .setDiscount(discount)
                 .setDate(parsedDate)
                 .build();
-
-            orderDao.insertOrder(order, email);
+            
+            if("yes".equals(includePack)){
+                Order wrappedOrder = new CustomPackage(order);
+                System.out.println("Order Total(With Packaging): " + wrappedOrder.getTotal());  
+                orderDao.insertOrder(wrappedOrder, email);
+            }else{
+                System.out.println("Order Total: " + order.getTotal());
+                orderDao.insertOrder(order, email);
+            }
+           
+            
+            
             if ("loyaltyProgram".equals(paymentMethod)) {
                 loyaltyPoints += (int) (totalAmount / 10); 
                 orderDao.updatePoints(loyaltyPoints, email);

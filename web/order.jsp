@@ -291,7 +291,13 @@
             <input type="text" class="form-control" id="walletId" name="walletId" placeholder="Enter your wallet ID" />
         </div>
 
-       
+              <div class="form-group">
+        <label class="form-label">Are You Sure You Want To Continue:</label>
+            <select class="form-control" id="continue" name="continue" required>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+            </select>
+              </div>
         <button type="submit" name="submit" class="btn btn-success" value="ProcessPayment" style="width:100%">Pay</button>
   
     </form>

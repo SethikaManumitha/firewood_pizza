@@ -40,42 +40,50 @@
     </head>
     <body>
         <nav class="navbar navbar-dark bg-danger">
-            <a class="navbar-brand text-white" href="index.jsp">Firewood Pizza</a>
-            <form class="form-inline ml-auto">
-                <% 
-                    String status = (String) session.getAttribute("status"); 
-                    if (status == null || !status.equals("logged")) {
-                %>
-                    <a href="login.jsp">
-                        <button class="btn btn-outline-light my-2 my-sm-0" style="margin-right:20px;" type="button">Sign-In</button>
-                    </a>
-                    <a href="signup.jsp">
-                        <button class="btn btn-outline-light my-2 my-sm-0" type="button">Sign-Up</button>
-                    </a>
-                <% 
-                    } else { 
-                        int points = (session.getAttribute("points") != null) ? (int) session.getAttribute("points") : 0;
-                %>
-                    <span class="points-badge mr-3">
-                        <i class="fas fa-star" style="color: gold;"></i> <strong><%= points %></strong>
-                    </span>
-                    <div class="dropdown show">
-                        <a class="btn btn-danger dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fas fa-user"></i>
-                        </a>
+    <a class="navbar-brand text-white" href="index.jsp">Firewood Pizza</a>
+    <form class="form-inline ml-auto">
+        <% 
+            String status = (String) session.getAttribute("status"); 
+            if (status == null || !status.equals("logged")) {
+        %>
+            <a href="login.jsp">
+                <button class="btn btn-outline-light my-2 my-sm-0" style="margin-right:20px;" type="button">Sign-In</button>
+            </a>
+            <a href="signup.jsp">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="button">Sign-Up</button>
+            </a>
+        <% 
+            } else { 
+                int points = (session.getAttribute("points") != null) ? (int) session.getAttribute("points") : 0;
+        %>
+        <div class="nav-item dropdown" style="position: relative; margin-right: 20px;">
+            <!-- Bell icon with notification badge -->
+            <a class="nav-link text-white" href="notification?email=<%= session.getAttribute("userEmail")  %>">
+                <i class="fas fa-bell"></i>
+                <span class="badge badge-light" id="notificationBadge" style="position: absolute; top: 5px; right: 0px; font-size: 0.75rem; padding: 2px 6px; color: red;">3</span>
+            </a>
+         
+        </div>
+            <span class="points-badge mr-3">
+                <i class="fas fa-star" style="color: gold;"></i> <strong><%= points %></strong>
+            </span>
+            <div class="dropdown show">
+                <a class="btn btn-danger dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-user"></i>
+                </a>
 
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                          <a class="dropdown-item" href="profile.jsp"><i class="fas fa-user"></i> User Profile</a>
-                          <hr>
-                          <a class="dropdown-item" href="order?email=<%= session.getAttribute("userEmail") %>"><i class="fas fa-star"></i> Favourite List</a>
-                          <a class="dropdown-item" href="login.jsp"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                        </div>
-                    </div>
-                <% 
-                    } 
-                %>
-            </form>
-        </nav>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="profile.jsp"><i class="fas fa-user"></i> User Profile</a>
+                  <hr>
+                  <a class="dropdown-item" href="order?email=<%= session.getAttribute("userEmail") %>"><i class="fas fa-star"></i> Favourite List</a>
+                  <a class="dropdown-item" href="login.jsp"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+              </div>
+        <% 
+            } 
+        %>
+    </form>
+</nav>
 
         <div class="container">
             <!-- Form container with border and centering -->

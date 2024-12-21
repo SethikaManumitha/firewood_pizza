@@ -16,9 +16,7 @@
     import javax.servlet.http.HttpServletRequest;
     import javax.servlet.http.HttpServletResponse;
     import java.io.IOException;
-    import java.io.PrintWriter;
-    import java.util.concurrent.ConcurrentHashMap;
-    @WebServlet("/admin")
+    
     public class AdminServlet extends HttpServlet {
 
         private final AdminDao adminDao = new AdminDao();
@@ -61,9 +59,7 @@
         orderContext.setState(new OutForDeliveryState());
         List<Order> outForOrderList = adminDao.selectAllOrders(orderContext.getStatus());
 
-        if (state == null || state.isEmpty()) {
-            state = "Placed";
-        }
+        if (state == null || state.isEmpty()) { state = "Placed"; }
 
         switch (state) {
             case "InPreparation":
@@ -124,6 +120,7 @@ private void changeState(HttpServletRequest request, HttpServletResponse respons
         System.out.println(orderContext.getStatus());
         adminDao.updatePizza(orderId, orderContext.getStatus());
         
+        // Observer Pattern
         OrderObserver order = new OrderObserver(orderId);
         User user = new User(name,email);
         order.setUser(user);

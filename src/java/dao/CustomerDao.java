@@ -58,6 +58,7 @@ public class CustomerDao {
             return exists;
         }
 
+    // Select relavant customer object
     public Customer selectCustomer(String email, String password) {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USERS_BY_EMAIL_SQL)) {
@@ -67,7 +68,6 @@ public class CustomerDao {
 
         ResultSet rs = preparedStatement.executeQuery();
 
-        // Make sure the result set contains rows
         if (rs.next()) {
             String name = rs.getString("full_name");
             String phone = rs.getString("phone");
@@ -75,7 +75,7 @@ public class CustomerDao {
             Date dob = rs.getDate("dob"); 
             int point = rs.getInt("point");
 
-           
+            //Return a new customer object
             return new Customer(name, email, password, phone, address, dob, point);
         }
     } catch (SQLException e) {

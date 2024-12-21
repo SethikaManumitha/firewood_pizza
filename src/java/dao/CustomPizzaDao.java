@@ -78,6 +78,8 @@ public class CustomPizzaDao {
         printSQLException(e);
     }
 }
+ 
+ // Update pizza status within the DB
  public void updatePizza(String name, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
          PreparedStatement selectStatement = connection.prepareStatement(SELECT_PIZZA_FAV_SQL);

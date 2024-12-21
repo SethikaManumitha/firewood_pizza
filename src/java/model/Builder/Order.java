@@ -17,10 +17,10 @@ public class Order {
     private String status;
     private Date date;
 
-    // Private constructor to enforce using Builder
+    // Constructor
     public Order(OrderBuilder builder) {
-        this.id = builder.id;  // Set the id from the builder
-        this.name = builder.name; // Set the name from the builder
+        this.id = builder.id; 
+        this.name = builder.name; 
         this.email = builder.email;
         this.items = builder.items;
         this.address = builder.address;
@@ -86,10 +86,27 @@ public class Order {
     public Date getDate() {
         return date;
     }
+    
+    public void placeOrder(Order order) {
+        System.out.println("Order placed: " + order);
+    }
+
+    public void cancelOrder(Order order) {
+        System.out.println("Order " + order + " has been canceled.");
+    }
+
+    public String addFeedback(String feedback) {
+        System.out.println(feedback);
+        return feedback;
+    }
+    
+    public String removeFeedback() {
+        return "";
+    }
 
     public static class OrderBuilder {
         private int id;  
-        private String name; // Add the name field to the builder
+        private String name; 
         private String email;
         private Map<String, String> items;  
         private String address;
@@ -100,7 +117,7 @@ public class Order {
         private String status;
         private Date date = new Date();
 
-        // Constructor that accepts HashMap directly for items
+        // Builder Constructor
         public OrderBuilder(int id, String name, String email, String address, String status, Map<String, String> items) {
             this.id = id;  
             this.name = name;

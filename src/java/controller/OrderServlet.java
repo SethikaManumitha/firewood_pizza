@@ -15,23 +15,28 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import model.Feedback;
 import model.Builder.*;
 import dao.*;
 import java.util.HashMap;
 import model.decorator.*;
 import model.stratergy.*;
+import model.command.*;
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
 
    
     private CustomPizzaDao customPizzaDao;
     private OrderDao orderDao;
- 
+    private FeedbackDao feedbackDao;
 
     @Override
     public void init() {
         customPizzaDao = new CustomPizzaDao();
         orderDao = new OrderDao();
+        feedbackDao = new FeedbackDao();
+        
+        
     
     }
 
@@ -53,32 +58,37 @@ public class OrderServlet extends HttpServlet {
                 buildOrder(request, response);
             }else if ("ProcessPayment".equals(formAction)) {
                 ProcessPayment(request, response);
+            }else if ("GiveFeedback".equals(formAction)) {
+                giveFeedback(request, response);
             }else if ("DeletePizza".equals(formAction)) {
-                deletePizza(request, response);
+                deleteFromCart(request, response);
             } else if ("UpdatePizza".equals(formAction)) {
-                updatePizza(request, response);
+                updateCart(request, response);
             }else if ("AddToCart".equals(formAction)) {
                 addToCart(request, response);
             }else {
-                showBuilderForm(request, response);
+                showOrderForm(request, response);
             }
         } catch (Exception ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", "An error occurred: " + ex.getMessage());
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         }
     }
 
-     private void showBuilderForm(HttpServletRequest request, HttpServletResponse response)
+    // Redirect to order page
+     private void showOrderForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             String deliveryOption = request.getParameter("deliveryOption");
+            
             String email = request.getParameter("email");
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
-             request.setAttribute("option", deliveryOption);
-            request.setAttribute("pizzas", pizzas);
             List<Pizza> favpizzas = orderDao.selectFavPizza(email);
-            System.out.println(favpizzas);
+            
+            request.setAttribute("option", deliveryOption);
+            request.setAttribute("pizzas", pizzas);
+            
             request.setAttribute("favpizzas", favpizzas);
             RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
             dispatcher.forward(request, response);
@@ -87,16 +97,17 @@ public class OrderServlet extends HttpServlet {
         }
     }
 
-     private void deletePizza(HttpServletRequest request, HttpServletResponse response)
+     // Remove a pizza from a cart
+     private void deleteFromCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             String name = request.getParameter("namedelete");
             String email = request.getParameter("emaildelete");
 
-            // Delete pizza from database
-            orderDao.updatePizzaDel(name, email);
+            // Delete pizza from cart
+            orderDao.removePizza(name, email);
 
-            // Fetch updated pizza list and display
+            // Fetch pizza list 
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
             request.setAttribute("pizzas", pizzas);
             List<Pizza> favpizzas = orderDao.selectFavPizza(email);
@@ -107,17 +118,18 @@ public class OrderServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", "Failed to delete pizza: " + ex.getMessage());
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         }
     }
     
-    private void updatePizza(HttpServletRequest request, HttpServletResponse response)
+    // Update cart by adding favourite
+    private void updateCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             String name = request.getParameter("namefav");
             String email = request.getParameter("emailfav");
             
-            // Delete pizza from database
+            // Update cart 
             customPizzaDao.updatePizza(name, email);
 
             // Fetch updated pizza list and display
@@ -128,10 +140,11 @@ public class OrderServlet extends HttpServlet {
             request.setAttribute("favpizzas", favpizzas);
             RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
             dispatcher.forward(request, response);
+            
         } catch (Exception ex) {
             Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", "Failed to delete pizza: " + ex.getMessage());
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         }
     }
     
@@ -166,6 +179,7 @@ public class OrderServlet extends HttpServlet {
         int loyaltyPoints = orderDao.selectPoints(email); 
         String paymentMethod = request.getParameter("paymentMethod");
 
+        // Stratergy Pattern
         PaymentContext paymentContext = new PaymentContext();
 
         switch (paymentMethod) {
@@ -187,11 +201,11 @@ public class OrderServlet extends HttpServlet {
             System.out.println("Invalid payment method selected.");
         }
 
-        System.out.println(pizzas);
         try {
             paymentContext.pay(totalAmount);
             double discount = paymentContext.getDiscount();
-            System.out.println(discount);
+            
+            // Order Builder Pattern
             Order order = new Order.OrderBuilder(0,"",email, address, "Placed", pizzaMap)
                 .setDeliveryOption(optionOrder)
                 .setPaymentType(paymentMethod)
@@ -201,8 +215,8 @@ public class OrderServlet extends HttpServlet {
                 .build();
             
             if("yes".equals(includePack)){
+                // Decorator pattern
                 Order wrappedOrder = new CustomPackage(order);
-                System.out.println("Order Total(With Packaging): " + wrappedOrder.getTotal());  
                 orderDao.insertOrder(wrappedOrder, email);
             }else{
                 System.out.println("Order Total: " + order.getTotal());
@@ -216,9 +230,10 @@ public class OrderServlet extends HttpServlet {
                 orderDao.updatePoints(loyaltyPoints, email);
             }
             
+            String orderName = order.getItems().toString();
             
-
             RequestDispatcher dispatcher = request.getRequestDispatcher("feedback.jsp");
+            request.setAttribute("orderName", orderName);
             dispatcher.forward(request, response);
 
         } catch (IllegalStateException e) {
@@ -226,30 +241,71 @@ public class OrderServlet extends HttpServlet {
             System.out.println("Payment failed");
         }
 }
-
     
+    private void giveFeedback(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String orderid = request.getParameter("id");
+            String user = request.getParameter("user");
+            String feedback = request.getParameter("feedback");
+            String rating = request.getParameter("rating");
+        
+           
+            CommandInvoker invoker = new CommandInvoker();
+            Feedback existingFeedback = feedbackDao.selectFeedback(orderid, user);
+            Feedback feedbackObj = new Feedback(orderid,feedback,rating,user);
+            invoker.setCommand(new FeedbackCommand(feedbackObj));
+            
+            invoker.executeCommand();          
+            if (existingFeedback != null) {
+                invoker.undoCommand();
+                System.out.println(feedbackObj.getStatus());
+                System.out.println(feedbackObj.getId());
+                feedbackDao.updateFeedback(feedbackObj.getStatus(),feedbackObj.getId());
+                request.setAttribute("btnStatus", "yes");
+            } else { 
+                feedbackDao.insertFeedback(feedbackObj);   
+                request.setAttribute("orderName", orderid);
+                request.setAttribute("feedback", feedback);
+                request.setAttribute("rating", rating);
+            }
+            RequestDispatcher dispatcher = request.getRequestDispatcher("feedback.jsp");
+           
+
+            dispatcher.forward(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("errorMessage", ex.getMessage());
+            showOrderForm(request, response);
+        }
+    }
+    
+
+    // Function to add to cart
      private void addToCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             
             String name = request.getParameter("nameadd");
             String email = request.getParameter("emailadd");
+            
+            // Update item status to 0 to add to cart
             orderDao.updatePizza(name, email);
             
             System.out.println(name);
             System.out.println(email);
            
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
-            request.setAttribute("pizzas", pizzas);
             List<Pizza> favpizzas = orderDao.selectFavPizza(email);
-            System.out.println(favpizzas);
+            
+            request.setAttribute("pizzas", pizzas);
             request.setAttribute("favpizzas", favpizzas);
             RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
             dispatcher.forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", "Failed to delete pizza: " + ex.getMessage());
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         }
     }
     
@@ -270,7 +326,7 @@ public class OrderServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", ex.getMessage());
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         }
     }
     
@@ -291,7 +347,7 @@ public class OrderServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", ex.getMessage());
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         }
     }
     
@@ -330,11 +386,11 @@ public class OrderServlet extends HttpServlet {
             
             List<Pizza> pizzas = customPizzaDao.selectAllPizza(email);
             request.setAttribute("pizzas", pizzas);
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         } catch (Exception ex) {
             Logger.getLogger(BuilderServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("errorMessage", ex.getMessage());
-            showBuilderForm(request, response);
+            showOrderForm(request, response);
         }
     }
 

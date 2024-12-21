@@ -10,7 +10,6 @@ package dao;
  */
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +21,7 @@ import model.Builder.*;
 import util.JDBCUtils;
 
 public class OrderDao {
-    private final String INSERT_PIZZA_SQL = "INSERT INTO ordertbl (custemail, items, address, delivery_option, payment_type, total,discount, status,date) \n" +
+    private final String INSERT_ORDER_SQL = "INSERT INTO ordertbl (custemail, items, address, delivery_option, payment_type, total,discount, status,date) \n" +
 "VALUES (?, ?, ?, ?, ?, ?, ?,?,?);";
     private final String UPDATE_PIZZA_DEL_SQL = "UPDATE pizza SET pizzastatus = 2 WHERE pizzaname = ? AND custemail = ? ;";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
@@ -43,7 +42,7 @@ public class OrderDao {
                ResultSet rs = preparedStatement.executeQuery();
            
                while(rs.next()){
-                    int id = rs.getInt("pizzaid");
+                   
                     String name = rs.getString("pizzaname");
                     String crust = rs.getString("crust");
                     String sauce = rs.getString("sauce"); 
@@ -53,8 +52,7 @@ public class OrderDao {
                     
                     String size = rs.getString("size"); 
                     
-                    String is_favourite = rs.getString("is_favorite"); 
-                    String cheese = rs.getString("cheese"); 
+
                     float price = rs.getFloat("price");
                     int qty = rs.getInt("qty");
                     
@@ -78,20 +76,20 @@ public class OrderDao {
             return pizzaList;
         }
     
+    //Update pizza status to 0
      public void updatePizza(String name, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
          PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PIZZA_FAV_SQL)) {
-        
-      
+    
         updateStatement.setString(1, name);
         updateStatement.setString(2, email);
         updateStatement.executeUpdate();
-
-        System.out.println("Successfully updated pizza status.");
+        
     } catch (SQLException e) {
         printSQLException(e);
     }
 }
+     // Select Loyalty Points
      public int  selectPoints(String email) {
             
            int points = 0;
@@ -113,6 +111,7 @@ public class OrderDao {
             return points;
         }
      
+    // Update loyalty points
     public void updatePoints(int points, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
          PreparedStatement updateStatement = connection.prepareStatement(UPDATE_POINTS_SQL)) {
@@ -127,8 +126,8 @@ public class OrderDao {
         printSQLException(e);
     }
 }
-     
-      public void updatePizzaDel(String name, String email) throws ClassNotFoundException {
+     // Update pizza status to 2
+      public void removePizza(String name, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
          PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PIZZA_DEL_SQL)) {
         
@@ -137,15 +136,15 @@ public class OrderDao {
         updateStatement.setString(2, email);
         updateStatement.executeUpdate();
 
-        System.out.println("Successfully deleted pizza status.");
     } catch (SQLException e) {
         printSQLException(e);
     }
 }
     
+      // Insert order
       public void insertOrder(Order order, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
-         PreparedStatement insertStatement = connection.prepareStatement(INSERT_PIZZA_SQL);
+         PreparedStatement insertStatement = connection.prepareStatement(INSERT_ORDER_SQL);
          PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PIZZA_ORDER_SQL)) {
 
         

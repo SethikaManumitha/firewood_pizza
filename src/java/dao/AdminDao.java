@@ -9,9 +9,10 @@ import java.util.*;
 public class AdminDao {
 
     private final String SELECT_ORDER_SQL = "SELECT * FROM ordertbl WHERE status = ?";
-    private final String INSERT_NOTIFICATION_SQL = "INSERT INTO notification (email, notification) VALUES (?, ?)";
-    private final String SELECT_CUSTOMER_SQL = "SELECT * FROM customer WHERE email = ?";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM pizza WHERE custemail = ? AND pizzaname = ?";
+    private final String SELECT_CUSTOMER_SQL = "SELECT * FROM customer WHERE email = ?";
+    
+    private final String INSERT_NOTIFICATION_SQL = "INSERT INTO notification (email, notification) VALUES (?, ?)";
     private final String UPDATE_STATE_SQL = "UPDATE ordertbl SET status = ? WHERE id = ?";
     private final String SELECT_ORDER_COUNT_SQL = "SELECT COUNT(*) FROM ordertbl WHERE status = ?";
 

@@ -18,7 +18,7 @@ public class User {
         
     }
 
-    // Update method to handle order status notifications
+    // Method to show order status notifications
     public void update(String status) {
         System.out.println("Notification to " + name + "( " + email + " )" +
                 " Your order status is now: " + status);

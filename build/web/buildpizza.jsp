@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
-<%@ page import="model.Builder.Crust" %>
-<%@ page import="model.Builder.Sauce" %>
-<%@ page import="model.Builder.Topping" %>
+<%@ page import="model.Crust" %>
+<%@ page import="model.Sauce" %>
+<%@ page import="model.Topping" %>
 <%@ page import="model.Builder.Pizza" %>
 <!DOCTYPE html>
 <html>

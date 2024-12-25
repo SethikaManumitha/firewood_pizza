@@ -4,33 +4,30 @@
  */
 package model.decorator;
 
-import model.Builder.Order;
+import model.Builder.*;
 /**
  *
  * @author MAS
  */
-abstract class OrderDecorator extends Order {
-    protected Order baseOrder;
+public abstract class OrderDecorator extends Order {
+    protected Order order;
 
-    protected OrderDecorator(Order baseOrder) {
-        super(new Order.OrderBuilder(
-                baseOrder.getId(),
-                baseOrder.getName(),
-                baseOrder.getEmail(), 
-                baseOrder.getAddress(), 
-                baseOrder.getStatus(),
-                baseOrder.getItems())
-               .setTotal(baseOrder.getTotal())
-               .setDiscount(baseOrder.getDiscount())
-               .setPaymentType(baseOrder.getPaymentType())
-               .setDeliveryOption(baseOrder.getDeliveryOption())
-               .setDate(baseOrder.getDate()));
-        
-        this.baseOrder = baseOrder;
+    public OrderDecorator(Order order) {
+        super(new OrderBuilder(order.getId(), order.getName(), order.getEmail())
+                .items(order.getItems())
+                .address(order.getAddress())
+                .deliveryOption(order.getDeliveryOption())
+                .paymentType(order.getPaymentType())
+                .total(order.getTotal())
+                .discount(order.getDiscount())
+                .status(order.getStatus())
+                .date(order.getDate())     
+        );
+        this.order = order;
     }
 
     @Override
-    public abstract double getTotal();
-    
-    public abstract String getDescription();
+    public double getTotal() {
+        return order.getTotal();
+    }
 }

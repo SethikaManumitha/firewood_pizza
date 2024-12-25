@@ -14,7 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.CustomerDao;
+import dao.FavoriteDao;
+import java.util.HashMap;
+import java.util.List;
 import model.Customer;
+import model.Feedback;
 
 /**
  * @author MAS
@@ -23,9 +27,11 @@ import model.Customer;
 public class CustomerServlet extends HttpServlet {
 
     private CustomerDao customerDao;
+    private FavoriteDao favoirteDao;
 
     public void init() {
         customerDao = new CustomerDao();
+        favoirteDao = new FavoriteDao();
     }
 
     @Override
@@ -58,14 +64,41 @@ public class CustomerServlet extends HttpServlet {
                 break;
             default:
                 showNewForm(request, response);
+                
                 break;
         }
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-        dispatcher.forward(request, response);
+        try {
+            List<HashMap<String, String>> feedback = favoirteDao.selectFeedback();
+            
+            for (HashMap<String, String> feedbackEntry : feedback) {
+                String item = feedbackEntry.get("item");
+                if (item != null) {
+                    
+                    if (item.contains("=")) {
+                        item = item.substring(0, item.indexOf("=")).trim();
+                    }
+                    
+                    
+                    if (item.startsWith("{") || item.endsWith("}")) {
+                        item = item.substring(1, item.length()).trim();
+                    }
+                    
+                    // Update the item with cleaned data
+                    feedbackEntry.put("item", item);
+                }
+            }
+            
+            System.out.println(feedback);
+            request.setAttribute("feedback", feedback);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+            dispatcher.forward(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CustomerServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // Insert a customer 
@@ -112,14 +145,49 @@ public class CustomerServlet extends HttpServlet {
             session.setAttribute("dob", dob);
             
             
-
+            
             if ("admin@123".equals(email)) {
                 // If the user is admin redirect to admin dashboard
-                response.sendRedirect(request.getContextPath() + "/admin");
+                System.out.println(email);
+                response.sendRedirect("admin");
             } else {
-                // Redirect customer interface
-                RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-                dispatcher.forward(request, response);
+                List<HashMap<String, String>> feedback = favoirteDao.selectFeedback();
+                
+               // Insertion Sort Algorithm
+               int n = feedback.size();
+               for (int i = 1; i < n; i++) {
+                   HashMap<String, String> key = feedback.get(i);  
+                   int keyRating = Integer.parseInt(key.get("rating"));
+                   int j = i - 1;
+
+                   // Move elements that are smaller than key's rating one position ahead
+                   while (j >= 0 && Integer.parseInt(feedback.get(j).get("rating")) < keyRating) {
+                       feedback.set(j + 1, feedback.get(j));
+                       j--;
+                   }
+
+                   // Insert the key HashMap into its correct position
+                   feedback.set(j + 1, key);
+               }
+
+               // Covert Item to a user firendly format
+               for (HashMap<String, String> feedbackEntry : feedback) {
+                   String item = feedbackEntry.get("item");
+                   if (item != null) {
+                       // Clean up the item string if it contains "=" or starts/ends with "{}"
+                       if (item.contains("=")) {
+                           item = item.substring(0, item.indexOf("=")).trim();
+                       }
+                       if (item.startsWith("{") || item.endsWith("}")) {
+                           item = item.substring(1, item.length()).trim();
+                       }
+                       feedbackEntry.put("item", item);
+                   }
+               }
+            System.out.println(feedback);
+            request.setAttribute("feedback", feedback);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+            dispatcher.forward(request, response);
             }
         } else {
             request.setAttribute("alertMessage", "Invalid email or password.");

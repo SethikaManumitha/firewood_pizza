@@ -11,12 +11,13 @@
     import model.state.*;  
     import model.observer.*;
     import javax.servlet.ServletException;
-    import javax.servlet.annotation.WebServlet;
     import javax.servlet.http.HttpServlet;
     import javax.servlet.http.HttpServletRequest;
     import javax.servlet.http.HttpServletResponse;
     import java.io.IOException;
-    
+import javax.servlet.annotation.WebServlet;
+import model.Topping;
+    @WebServlet("/admin")
     public class AdminServlet extends HttpServlet {
 
         private final AdminDao adminDao = new AdminDao();
@@ -37,8 +38,16 @@
             try {    
                 if ("ChangeState".equals(formAction)) {
                     changeState(request, response, orderContext);
+                }else if("AddPromo".equals(formAction)){
+                    addPromo(request, response);
+                }else if("AddOfferTopping".equals(formAction)){
+                    addOfferTopping(request, response);
+                }else if ("GetToppings".equals(formAction)) { 
+                    getToppings(request, response);
+                }else{
+                    selectState(request, response,  state);
                 }
-                selectState(request, response, orderContext, state);
+                
             } catch (Exception ex) {
                 Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in doGet", ex);
                 request.setAttribute("errorMessage", "Unable to load admin data: " + ex.getMessage());
@@ -46,21 +55,27 @@
             }
         }
 
-        private void selectState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext, String state)
+        private void selectState(HttpServletRequest request, HttpServletResponse response, String state)
         throws ServletException, IOException {
 
     try {
-        orderContext.setState(new PlacedState());
+        // A new OrderContext object
+        OrderContext orderContext = new OrderContext();
+        
+        // Get all placed orders
         List<Order> placedList = adminDao.selectAllOrders(orderContext.getStatus());
-
-        orderContext.setState(new InPreparationState());
+        orderContext.processOrder();
+        
+        // Get all in preperation orders
         List<Order> inPreparationList = adminDao.selectAllOrders(orderContext.getStatus());
-
-        orderContext.setState(new OutForDeliveryState());
+        orderContext.processOrder();
+        
+        // Get all out for delivery orders
         List<Order> outForOrderList = adminDao.selectAllOrders(orderContext.getStatus());
-
+        
         if (state == null || state.isEmpty()) { state = "Placed"; }
 
+        // Send order list to relevant page
         switch (state) {
             case "InPreparation":
                 request.setAttribute("orders", inPreparationList);
@@ -77,13 +92,30 @@
                 forwardRequest(request, response, "placedadmin.jsp");
                 break;
         }
-
-        
-
+       
     } catch (Exception ex) {
         Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in selectState", ex);
         handleError(response, "Error in selectState: " + ex.getMessage());
     }
+}
+        
+        // Get all toppings 
+        private void getToppings(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+        try {
+            
+             // Retrieve a list of toppings
+             List<Topping> toppings = adminDao.selectAllToppings();
+             
+             request.setAttribute("toppings", toppings);
+             System.out.println(toppings);
+             forwardRequest(request, response, "offers.jsp");
+            
+        } catch (Exception ex) {
+            Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in selectState", ex);
+            handleError(response, "Error in selectState: " + ex.getMessage());
+        }
 }
 
 private void changeState(HttpServletRequest request, HttpServletResponse response, OrderContext orderContext)
@@ -118,17 +150,77 @@ private void changeState(HttpServletRequest request, HttpServletResponse respons
 
         orderContext.processOrder();
         System.out.println(orderContext.getStatus());
-        adminDao.updatePizza(orderId, orderContext.getStatus());
+        adminDao.updateOrder(orderId, orderContext.getStatus());
         
         // Observer Pattern
-        OrderObserver order = new OrderObserver(orderId);
-        User user = new User(name,email);
-        order.setUser(user);
+        OrderSubject order = new OrderSubject(orderId);
+        
+        UserObserver user = new UserObserver(name,email);
+        
+        order.addObserver(user);
         
         String notification = order.changeStatus(orderContext.getStatus());
         adminDao.insertNotification(email, notification);
-        selectState(request, response, orderContext, orderContext.getStatus());
+        selectState(request, response, orderContext.getStatus());
 
+    } catch (NumberFormatException e) {
+        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Invalid delivery option ID", e);
+        handleError(response, "Invalid delivery option ID: " + e.getMessage());
+    } catch (Exception ex) {
+        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in changeState", ex);
+        handleError(response, "Unable to process order state change: " + ex.getMessage());
+    }
+}
+
+private void addPromo(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+    try {
+       String desc = request.getParameter("description");
+        String totalStr = request.getParameter("total"); 
+        String discountStr = request.getParameter("discount");
+
+        // Convert total and discount to double
+        double total = Double.parseDouble(totalStr);
+        double discount = Double.parseDouble(discountStr);
+        
+        System.out.println(desc);
+        System.out.println(total);
+        System.out.println(discount);
+        
+        // Insert promotion into the database (use actual parameters required)
+        adminDao.insertPromotion(desc, total, discount);
+
+        forwardRequest(request, response, "promotion.jsp");
+
+        
+    } catch (NumberFormatException e) {
+        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Invalid delivery option ID", e);
+        handleError(response, "Invalid delivery option ID: " + e.getMessage());
+    } catch (Exception ex) {
+        Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Error in changeState", ex);
+        handleError(response, "Unable to process order state change: " + ex.getMessage());
+    }
+}
+
+// Add topping offer into the database
+private void addOfferTopping(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+    try {
+        String idStr = request.getParameter("topping");
+        String discountStr = request.getParameter("discount");
+
+        int id = Integer.parseInt(idStr); 
+        
+        // Convert total and discount to double
+        double discount = Double.parseDouble(discountStr);
+        
+        
+        adminDao.updateToppingPrice(id, discount);
+
+        forwardRequest(request, response, "offers.jsp");
+ 
     } catch (NumberFormatException e) {
         Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, "Invalid delivery option ID", e);
         handleError(response, "Invalid delivery option ID: " + e.getMessage());

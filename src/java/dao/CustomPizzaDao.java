@@ -21,14 +21,16 @@ import model.Builder.*;
 import util.JDBCUtils;
 
 public class CustomPizzaDao {
-    private final String INSERT_PIZZA_SQL = "INSERT INTO Pizza (pizzaname, custemail, crust, sauce, topping, size,  pizzastatus,is_favorite,cheese,price,qty)\n" +
-"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);";
+    private final String INSERT_PIZZA_SQL = "INSERT INTO Pizza (pizzaname, custemail, crust, sauce, "
+            + "topping, size,  pizzastatus,is_favorite,cheese,price,qty)\n" 
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);";
     private final String SELECT_PIZZA_SQL = "SELECT * FROM Pizza WHERE pizzastatus = 0 AND custemail = ?";
     private final String DELETE_PIZZA_SQL = "DELETE FROM Pizza WHERE pizzaname = ? AND custemail = ?";
     
     private final String SELECT_PIZZA_FAV_SQL = "SELECT * FROM pizza WHERE pizzaname = ? AND custemail = ? ;";
     private final String UPDATE_PIZZA_SQL = "UPDATE pizza SET is_favorite = ? WHERE pizzaname = ? AND custemail = ?;";
     
+    // Insert pizza into the database
    public void insertPizza(Pizza pizza, String email) throws ClassNotFoundException {
     try (Connection connection = JDBCUtils.getInstance().getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PIZZA_SQL)) {
@@ -37,9 +39,9 @@ public class CustomPizzaDao {
         preparedStatement.setString(2, email);
         preparedStatement.setString(3, pizza.getCrust());
         preparedStatement.setString(4, pizza.getSauce());
-
         
         String toppings = "";
+        // Convert topping list into string
         List<String> toppingsList = pizza.getToppings();
         for (int i = 0; i < toppingsList.size(); i++) {
         toppings += toppingsList.get(i); 
@@ -47,11 +49,8 @@ public class CustomPizzaDao {
             toppings += ","; 
             }
         }
-
         preparedStatement.setString(5, toppings);
-        
         preparedStatement.setString(6, pizza.getSize());
-       
         preparedStatement.setBoolean(7, pizza.isFavourite());
         preparedStatement.setBoolean(8, pizza.isIncludeCheese());
         preparedStatement.setInt(9, 0);

@@ -33,7 +33,9 @@ public class LoyaltyProgramPayment implements PaymentStrategy {
 
     private double calculateDiscount(double amount) {
        
+        // The discount rate customer receives
         double discountRate;
+        
         if (loyaltyPoints >= 500) {
             discountRate = 0.10; 
         } else if (loyaltyPoints >= 100) {
@@ -41,8 +43,9 @@ public class LoyaltyProgramPayment implements PaymentStrategy {
         } else {
             discountRate = 0.01; 
         }
-
         discount = amount * discountRate;
+        
+        // The maximum discount rate is 0.5
         double maxDiscount = amount * 0.5; 
         if (discount > maxDiscount) {
             discount = maxDiscount;
@@ -52,7 +55,7 @@ public class LoyaltyProgramPayment implements PaymentStrategy {
     }
 
     private int accumulatePoints(double amount) {
-       
+        // Update the points after purchase
         loyaltyPoints += (int) (amount / 100);  
         return loyaltyPoints;  
     }

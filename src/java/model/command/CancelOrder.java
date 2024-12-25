@@ -3,32 +3,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model.command;
+
 import model.Builder.Order;
-import dao.OrderDao;
+
 /**
  *
  * @author MAS
  */
-public class PlaceOrderCommand implements Command {
+public class CancelOrder implements Command {
 
-    private Order order;
-   
+    private final Order order;
     
-    public PlaceOrderCommand(Order order) {
+    public CancelOrder(Order order) {
         this.order = order;
-
     }
-     
+    
     @Override
     public void execute() {
-        order.placeOrder(order);
+        System.out.println("Cancelling order");
+        order.setStatus("Cancelled");
     }
 
     @Override
     public void undo() {
-        System.out.println("Undoing Order " + order);
-        order.cancelOrder(order);
+        System.out.println("Order Placed " + order);
+        order.setStatus("Placed");
     }
     
 }
-

@@ -33,12 +33,18 @@
     .navbar .dropdown {
     margin-right: 100px; /* Adjusts the position of the user icon */
 }
+
+.old-price {
+    text-decoration: line-through;
+    color: red; /* Optional: To make the original price red */
+}
+
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-dark bg-danger">
-    <a class="navbar-brand text-white" href="index.jsp">Firewood Pizza</a>
+    <a class="navbar-brand text-white" href="new">Firewood Pizza</a>
     <form class="form-inline ml-auto">
         <% 
             String status = (String) session.getAttribute("status"); 
@@ -193,10 +199,17 @@
                             for (Topping topping : toppings) {
                         %>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="topping" id="<%= topping.getName() %>" value="<%= topping.getName() %>" data-price="<%= topping.getPrice() %>">
-                            <label class="form-check-label" for="<%= topping.getName() %>"><%= topping.getName() %> (LKR <span class="price"><%= topping.getPrice() %></span>)</label>
+                            <input class="form-check-input" type="checkbox" name="topping" id="<%= topping.getName() %>" value="<%= topping.getName() %>" data-price="<%= topping.getPrice()- topping.getDiscount() %>">
+                            <label class="form-check-label" for="<%= topping.getName() %>">
+                                <%= topping.getName() %> (LKR 
+                                <span class="price">
+                                    <% if (topping.getDiscount() > 0) { %>
+                                        <span class="old-price"><%= topping.getPrice() %></span> 
+                                    <% } %>
+                                    <%= topping.getPrice() - topping.getDiscount() %>
+                                </span>)
+                            </label>                       
                         </div>
-                        <script>console.log(<%= topping.getName() %>)</script>
                         <% 
                             }
                         }

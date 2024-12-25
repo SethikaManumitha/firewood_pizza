@@ -1,4 +1,6 @@
-    <%-- 
+    <%@page import="java.util.List"%>
+<%@page import="java.util.HashMap"%>
+<%-- 
         Document   : index
         Created on : Dec 8, 2024, 10:07:41 AM
         Author     : MAS
@@ -137,14 +139,80 @@
 }
 
 
+/* Feedback Cards */
+    .feedback-cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 20px;
+        margin: 40px 0;
+    }
 
+    .card {
+        width: 100%;
+        max-width: 300px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        transition: transform 0.2s ease-in-out;
+    }
 
+    .card:hover {
+        transform: scale(1.05);
+    }
 
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+.stars {
+            display: flex;
+        }
+
+        .star {
+            font-size: 24px;
+            color: #ccc;
+        }
+
+        .star.filled {
+            color: #f4c542;
+        }
         </style>
     </head>
     <body>
         <nav class="navbar navbar-dark bg-danger">
-    <a class="navbar-brand text-white" href="index.jsp">Firewood Pizza</a>
+    <a class="navbar-brand text-white" href="new">Firewood Pizza</a>
     <form class="form-inline ml-auto">
         
         
@@ -240,8 +308,58 @@
 
         <hr>
 
+        <div class="container-fluid">
+    <%
+    // Retrieve the feedback list from the request
+    List<HashMap<String, String>> feedback = (List<HashMap<String, String>>) request.getAttribute("feedback");
+    if (feedback != null && !feedback.isEmpty()) {
+    %>
+
+    <div class="feedback-cards-container">
+        <%
+        // Iterate over the feedback list and display the details
+        for (HashMap<String, String> item : feedback) {
+        int rating = Integer.parseInt(item.get("rating")); 
+        %>
+            <div class="card">
+                <img src="https://placehold.co/400" >
+                <div class="card-body">
+                    <h5 class="card-title"><%= item.get("item") %></h5>
+                      <%
+                            // Generate star rating
+                            for (int i = 1; i <= 5; i++) {
+                                if (i <= rating) {
+                            %>
+                                <i class="fa fa-star" style="color: gold;"></i>
+                            <%
+                                } else {
+                            %>
+                                <i class="fa fa-star-o" style="color: gold;"></i>
+                            <%
+                                }
+                            }
+                            %>
+
+                    <form action="order" method="POST">
+                        <input type="hidden" value="<%= item.get("item") %>" name="nameadd">
+                        <input type="hidden" value="<%= session.getAttribute("userEmail") %>" name="emailadd">
+                        <button type="submit" name="submit" value="AddToCart" class="btn btn-success">Add To Cart</button>
+                    </form>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <%
+    } else {
+    %>
+        <p>No feedback available.</p>
+    <%
+    }
+    %>
+</div>
         <footer style="background-color: black; color: white; padding: 20px 0; margin-top: 40px;">
-        <div class="container text-center">
+        <div class="container-fluid text-center">
             <div class="row">
                 <div class="col-md-4">
                     <h5>About Us</h5>

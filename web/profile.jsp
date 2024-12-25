@@ -40,7 +40,7 @@
     </head>
     <body>
         <nav class="navbar navbar-dark bg-danger">
-    <a class="navbar-brand text-white" href="index.jsp">Firewood Pizza</a>
+    <a class="navbar-brand text-white" href="new">Firewood Pizza</a>
     <form class="form-inline ml-auto">
         <% 
             String status = (String) session.getAttribute("status"); 

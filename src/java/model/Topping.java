@@ -12,12 +12,14 @@ public class Topping {
     private int toppingId;
     private String name;
     private double price;
+    private double discount;
 
     // Constructor
-    public Topping(int toppingId, String name, double price) {
+    public Topping(int toppingId, String name, double price,double discount) {
         this.toppingId = toppingId;
         this.name = name;
         this.price = price;
+        this.discount = discount;
     }
 
     // Getters and Setters
@@ -25,21 +27,32 @@ public class Topping {
         return toppingId;
     }
 
-    public void setToppingId(int toppingId) {
-        this.toppingId = toppingId;
-    }
-
     public String getName() {
         return name;
+    }
+    
+     public double getPrice() {
+        return price;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    
+    public void setToppingId(int toppingId) {
+        this.toppingId = toppingId;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price;
+   
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
+    
 
     public void setPrice(double price) {
         this.price = price;

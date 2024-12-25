@@ -20,6 +20,7 @@ import util.JDBCUtils;
 public class ToppingDao {
     private final String SELECT_TOPPING_SQL = "SELECT * FROM topping";
     
+      // Select all the toppings from the database
      public List<Topping>  selectAllToppings() {
            List<Topping> toppings = new ArrayList<>();
             try (Connection connection = JDBCUtils.getInstance().getConnection();
@@ -33,7 +34,8 @@ public class ToppingDao {
                     int id = rs.getInt("toppingid");
                     String name = rs.getString("toppingname");
                     int price = rs.getInt("price"); 
-                    toppings.add(new Topping(id,name,price));
+                    double discount = rs.getDouble("discount");
+                    toppings.add(new Topping(id,name,price,discount));
                 }
             } catch (SQLException e) {
                 printSQLException(e);

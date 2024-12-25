@@ -94,7 +94,12 @@
                         <a href="admin"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a>
                     </li>
                     
-                   
+                  <li>
+        <a href="promotion.jsp"><i class="fas fa-gift mr-2"></i>Promotion</a>
+    </li>
+    <li>
+        <a href="admin?submit=GetToppings"><i class="fas fa-percent mr-2"></i>Offers for Toppings</a>
+    </li>
                     <li>
                         <a href="login.jsp">
                             <i class="fas fa-sign-out-alt mr-1"></i>Logout

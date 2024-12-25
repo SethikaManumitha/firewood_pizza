@@ -16,6 +16,7 @@ public class FeedbackDao {
     private final String SELECT_FEEDBACK_BY_ORDER_USER_SQL = "SELECT * FROM feedback WHERE orderID = ? AND fuser = ?;";
 
    
+    //Insert feedback into the database
     public void insertFeedback(Feedback feedback) throws ClassNotFoundException {
         try (Connection connection = JDBCUtils.getInstance().getConnection();
              PreparedStatement insertStatement = connection.prepareStatement(INSERT_FEEDBACK_SQL)) {

@@ -10,7 +10,6 @@ package model.stratergy;
  */
 public class DigitalWalletPayment implements PaymentStrategy {
     private String walletId;
-    private double discount;
     public DigitalWalletPayment(String walletId) {
         this.walletId = walletId;
     }
@@ -22,7 +21,7 @@ public class DigitalWalletPayment implements PaymentStrategy {
     
     @Override
     public double getDiscount() {
-        return discount; 
+        return 0.0; 
     }
 }
 

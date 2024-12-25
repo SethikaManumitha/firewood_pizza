@@ -11,17 +11,18 @@ import model.Builder.Order;
 public class CustomPackage extends OrderDecorator {
     private final double wrappingCost = 50.0;
 
-    public CustomPackage(Order baseOrder) {
-        super(baseOrder);
+    public CustomPackage(Order order) {
+        super(order);
     }
 
     @Override
     public double getTotal() {
-        return baseOrder.getTotal() + wrappingCost;
+        return order.getTotal() + wrappingCost;
     }
 
-    @Override
-    public String getDescription() {
-        return baseOrder.getStatus() + " with gift wrapping";
+    @Override   
+    public String toString() {
+        return order.toString() + " with gift wrapping";
     }
 }
+
